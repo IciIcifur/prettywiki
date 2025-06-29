@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="text-red-700">I am a main page</div>
+  <hello-world msg="приветик" />
 </template>
 
 <style scoped></style>

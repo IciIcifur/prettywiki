@@ -1,43 +1,16 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
 defineProps<{ msg: string }>();
-
-const count = ref(0);
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+  <div class="flex w-fit flex-col gap-4">
+    <UButton
+      v-for="i of [1, 2, 3, 4, 5, 7, 9, 11, 12, 12, 15]"
+      :key="i"
+      color="primary"
+      >Nuxt UI</UButton
+    >
   </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Learn more about IDE Support for Vue in the
-    <a
-      href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support"
-      target="_blank"
-      >Vue Docs Scaling up Guide</a
-    >.
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
-  <p class="bg-red-500 text-white p-2">Test Tailwind</p>
-  <UButton color="primary">Nuxt UI</UButton>
 </template>
-
-<style scoped>
-.read-the-docs {
-  color: #888;
-}
-</style>

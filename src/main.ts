@@ -1,12 +1,12 @@
-import "./style.css";
-import { createApp } from "vue";
-import App from "./App.vue";
-import { createRouter, createWebHistory } from "vue-router";
-import ui from "@nuxt/ui/vue-plugin";
-import MainPage from "./pages/MainPage.vue";
+import './style.css';
+import { createApp } from 'vue';
+import App from './App.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import ui from '@nuxt/ui/vue-plugin';
+import MainPage from './pages/MainPage.vue';
 
 const app = createApp(App);
-const routes = [{ path: "/", component: MainPage }];
+const routes = [{ path: '/', name: 'Википедия', component: MainPage }];
 
 const router = createRouter({
   routes,
@@ -16,4 +16,4 @@ const router = createRouter({
 app.use(router);
 app.use(ui);
 
-app.mount("#app");
+app.mount('#app');

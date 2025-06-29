@@ -1,8 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MainLayout from "./layouts/MainLayout.vue";
+</script>
 
 <template>
   <UApp>
-    <RouterView />
+    <MainLayout> <RouterView /></MainLayout>
   </UApp>
 </template>
 
