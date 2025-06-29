@@ -32,7 +32,8 @@ const count = ref(0);
     >.
   </p>
   <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
-  <UButton color="primary">Button</UButton>
+  <p class="bg-red-500 text-white p-2">Test Tailwind</p>
+  <UButton color="primary">Nuxt UI</UButton>
 </template>
 
 <style scoped>
