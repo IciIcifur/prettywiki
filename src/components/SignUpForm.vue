@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { signUpFormSchema, SignUpFormSchemaType } from '../utils/zodSchemas.ts';
+import type { SignUpFormSchemaType } from '../utils/zodSchemas.ts';
+import { signUpFormSchema } from '../utils/zodSchemas.ts';
 import { ref } from 'vue';
 
 const { state } = defineProps<{ state: SignUpFormSchemaType }>();

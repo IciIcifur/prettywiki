@@ -6,8 +6,11 @@ import type {
   SignUpFormSchemaType,
 } from '../utils/zodSchemas.ts';
 import { signInFormSchema, signUpFormSchema } from '../utils/zodSchemas.ts';
+import { GetUserByLogin } from '../api/userAPI.ts';
 
 const userStore = useUserStore();
+const toast = useToast();
+
 const items = ref([{ label: 'Вход' }, { label: 'Регистрация' }]);
 const activeTab = ref('0');
 
@@ -21,16 +24,24 @@ const signUpFormValue = reactive<SignUpFormSchemaType>({
   email: undefined,
 });
 
-function onSubmit() {
-  if (activeTab.value === '0') console.log(signInFormValue.login);
-  else console.log(signUpFormValue.login);
-  userStore.login({ id: Date.now().toString(), login: signInFormValue.login });
+async function onSubmit() {
+  if (activeTab.value === '0') {
+    const userData = await GetUserByLogin(signInFormValue.login);
+    if (userData) userStore.login(userData);
+    else toast.add({ color: 'error', title: 'Пользователь не существует' });
+  } else {
+    toast.add({
+      color: 'error',
+      title: 'Регистрация невозможна',
+      description:
+        'Wikipedia API пока не поддерживает регистрацию пользователей со сторонних ресурсов.',
+    });
+  }
 }
 
 const actionText = computed<string>(() =>
   activeTab.value === '0' ? 'Войти' : 'Зарегистрироваться',
 );
-
 const actionDisabled = computed<boolean>(() => {
   try {
     if (activeTab.value === '0') signInFormSchema.parse(signInFormValue);

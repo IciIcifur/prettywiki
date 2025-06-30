@@ -1,4 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useUserStore } from '../stores/userStore.ts';
+
+onMounted(async () => {
+  const userStore = useUserStore();
+  await userStore.restoreUser();
+});
+</script>
 
 <template>
   <div class="flex min-h-screen w-full flex-col">
