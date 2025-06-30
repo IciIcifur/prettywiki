@@ -15,12 +15,10 @@ export const useUserStore = defineStore('user', {
   actions: {
     async restoreUser() {
       const login = GetUserFromCookie();
-      const toast = useToast();
 
       if (login) {
         const userData = await GetUserByLogin(login);
         if (userData) this.login(userData);
-        else toast.add({ color: 'error', title: 'Пользователь не существует' });
       }
     },
     login(userData: User) {
