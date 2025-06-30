@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { User } from '../utils/types.ts';
+import type { User } from '../types/types.ts';
 import {
   GetUserFromCookie,
   RemoveUserFromCookie,

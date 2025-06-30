@@ -4,8 +4,8 @@ import { computed, reactive, ref } from 'vue';
 import type {
   SignInFormSchemaType,
   SignUpFormSchemaType,
-} from '../utils/zodSchemas.ts';
-import { signInFormSchema, signUpFormSchema } from '../utils/zodSchemas.ts';
+} from '../types/zodSchemas.ts';
+import { signInFormSchema, signUpFormSchema } from '../types/zodSchemas.ts';
 import { GetUserByLogin } from '../api/userAPI.ts';
 
 const userStore = useUserStore();

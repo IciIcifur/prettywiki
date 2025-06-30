@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SignInFormSchemaType } from '../utils/zodSchemas.ts';
-import { signInFormSchema } from '../utils/zodSchemas.ts';
+import type { SignInFormSchemaType } from '../types/zodSchemas.ts';
+import { signInFormSchema } from '../types/zodSchemas.ts';
 import { ref } from 'vue';
 
 const { state } = defineProps<{ state: SignInFormSchemaType }>();

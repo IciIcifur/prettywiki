@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { User } from '../utils/types.ts';
+import type { User } from '../types/types.ts';
 
 const API_URI = 'https://en.wikipedia.org/w/api.php';
 const ORIGIN = '*';
