@@ -3,7 +3,11 @@ defineProps<{ msg: string }>();
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
+  <h1>Заголовок 1</h1>
+  <h2>Заголовок 2</h2>
+  <h3>Заголовок 3</h3>
+  <h4>Заголовок 4</h4>
+  <p>{{ msg }} Обычный текст</p>
 
   <div class="flex w-fit flex-col gap-4">
     <UButton
