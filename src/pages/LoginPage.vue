@@ -7,7 +7,7 @@ import type {
 } from '../utils/zodSchemas.ts';
 import { signInFormSchema, signUpFormSchema } from '../utils/zodSchemas.ts';
 
-const { user, isAuthenticated, logout } = useUserStore();
+const userStore = useUserStore();
 const items = ref([{ label: 'Вход' }, { label: 'Регистрация' }]);
 const activeTab = ref('0');
 
@@ -24,6 +24,7 @@ const signUpFormValue = reactive<SignUpFormSchemaType>({
 function onSubmit() {
   if (activeTab.value === '0') console.log(signInFormValue.login);
   else console.log(signUpFormValue.login);
+  userStore.login({ id: Date.now().toString(), login: signInFormValue.login });
 }
 
 const actionText = computed<string>(() =>
@@ -43,15 +44,15 @@ const actionDisabled = computed<boolean>(() => {
 
 <template>
   <div class="flex w-full items-center justify-center">
-    <UCard v-if="isAuthenticated" class="max-w-md">
+    <UCard v-if="userStore.isAuthenticated" class="max-w-md">
       <template #header>
         <h4 class="h-8 w-full">Вы уже вошли в систему!</h4>
       </template>
 
       <p>
-        Вы уже выполнили вход в систему под никнеймом
-        <span class="text-indigo-500 dark:text-indigo-400">{{
-          user.nickname
+        Вы уже выполнили вход в систему с логином
+        <span class="font-medium text-cyan-500 dark:text-cyan-400">{{
+          userStore.user?.login
         }}</span
         >. Хотите выйти из аккаунта?
       </p>
@@ -59,7 +60,7 @@ const actionDisabled = computed<boolean>(() => {
       <template #footer>
         <div class="flex h-8 justify-between gap-4">
           <UButton
-            @click="logout"
+            @click="userStore.logout"
             label="Выйти"
             size="lg"
             variant="ghost"
