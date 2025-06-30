@@ -1,22 +1,44 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/userStore.ts';
 import { computed, reactive, ref } from 'vue';
+import type {
+  SignInFormSchemaType,
+  SignUpFormSchemaType,
+} from '../utils/zodSchemas.ts';
+import { signInFormSchema, signUpFormSchema } from '../utils/zodSchemas.ts';
 
 const { user, isAuthenticated, logout } = useUserStore();
 const items = ref([{ label: 'Вход' }, { label: 'Регистрация' }]);
 const activeTab = ref('0');
 
-const signInFormValue = reactive({});
-const signUpFormValue = reactive({});
+const signInFormValue = reactive<SignInFormSchemaType>({
+  login: '',
+  password: '',
+});
+const signUpFormValue = reactive<SignUpFormSchemaType>({
+  login: '',
+  password: '',
+  email: undefined,
+});
 
 function onSubmit() {
-  if (activeTab.value === '0') console.log(signInFormValue);
-  else console.log(signUpFormValue);
+  if (activeTab.value === '0') console.log(signInFormValue.login);
+  else console.log(signUpFormValue.login);
 }
 
-const actionText = computed(() =>
+const actionText = computed<string>(() =>
   activeTab.value === '0' ? 'Войти' : 'Зарегистрироваться',
 );
+
+const actionDisabled = computed<boolean>(() => {
+  try {
+    if (activeTab.value === '0') signInFormSchema.parse(signInFormValue);
+    else signUpFormSchema.parse(signUpFormValue);
+    return false;
+  } catch {
+    return true;
+  }
+});
 </script>
 
 <template>
@@ -50,7 +72,8 @@ const actionText = computed(() =>
     <UCard v-else class="w-full max-w-md">
       <UTabs v-model="activeTab" :items="items" color="neutral" class="w-full">
         <template #content="{ index }"
-          ><SignInForm v-if="index === '0'" /> <SignUpForm v-else />
+          ><SignInForm v-if="index == 0" :state="signInFormValue" />
+          <SignUpForm v-else :state="signUpFormValue" />
         </template>
       </UTabs>
 
@@ -64,6 +87,7 @@ const actionText = computed(() =>
           />
           <UButton
             @click.prevent="onSubmit"
+            :disabled="actionDisabled"
             :label="actionText"
             variant="solid"
           />
