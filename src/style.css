@@ -23,7 +23,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body, div#app {
+html,
+body,
+div#app {
   height: 100%;
 }
 
