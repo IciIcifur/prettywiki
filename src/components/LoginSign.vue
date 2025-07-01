@@ -15,7 +15,7 @@ const userStore = useUserStore();
   <UButton
     v-else
     to="/login"
-    :label="userStore.user.login"
+    :label="userStore.user?.login"
     color="secondary"
     variant="link"
     icon="i-lucide-circle-user"
