@@ -1,8 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import LoginSign from './LoginSign.vue';
+</script>
 
 <template>
   <header
-    class="sticky top-0 z-50 flex h-fit w-full items-center justify-between gap-2 border-b border-neutral-200 bg-white/40 px-8 py-2 backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/60"
+    class="sticky top-0 z-50 flex h-fit w-full items-center justify-between gap-4 border-b border-neutral-200 bg-white/40 px-8 py-2 backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-900/60"
   >
     <div class="flex h-fit flex-col items-start justify-center">
       <ULink
@@ -12,6 +14,9 @@
       >
       <p class="text-xs italic">Красивая энциклопедия</p>
     </div>
-    <ToggleColorScheme />
+    <div class="flex items-center gap-4">
+      <LoginSign />
+      <ToggleColorScheme />
+    </div>
   </header>
 </template>
