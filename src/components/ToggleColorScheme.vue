@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useColorMode } from '@vueuse/core';
+  import { useColorMode } from '@vueuse/core';
 
-const colorMode = useColorMode();
+  const colorMode = useColorMode();
 
-function toggleScheme() {
-  colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark';
-}
+  function toggleScheme() {
+    colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark';
+  }
 </script>
 
 <template>
@@ -13,6 +13,6 @@ function toggleScheme() {
     :icon="colorMode == 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
     color="secondary"
     variant="soft"
-    @click="toggleScheme"
+    @click.stop="toggleScheme"
   />
 </template>
