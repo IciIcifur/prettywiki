@@ -1,13 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { useI18n } from 'vue-i18n';
+  const { t } = useI18n();
+</script>
 
 <template>
   <footer
-    class="bottom-0 z-50 flex h-fit w-full items-center justify-between gap-2 border-t border-neutral-200 bg-white/60 px-8 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-900/60"
+    class="bottom-0 z-30 flex h-fit w-full items-center justify-between gap-2 border-t border-neutral-200 bg-white/60 px-8 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-900/60"
   >
-    <p>© IciIcifur, 2025</p>
+    <p>{{ t('footer.copyright', { year: '2025', author: 'IciIcifur' }) }}</p>
 
     <div class="flex h-fit items-center justify-center gap-1">
-      <p class="text-xs italic">Источники</p>
+      <p class="text-xs italic">{{ t('footer.sources') }}</p>
     </div>
 
     <div class="flex h-fit items-center justify-center gap-1">

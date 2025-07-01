@@ -7,6 +7,9 @@ import ui from '@nuxt/ui/vue-plugin';
 import MainPage from './pages/MainPage.vue';
 import LoginPage from './pages/LoginPage.vue';
 import MainLayout from './layouts/MainLayout.vue';
+import { createI18n } from 'vue-i18n';
+import customEn from './assets/dictionaries/en.json';
+import customRu from './assets/dictionaries/ru.json';
 
 const app = createApp(App);
 const routes = [
@@ -19,6 +22,15 @@ const routes = [
     ],
   },
 ];
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  availableLocales: ['en', 'ru'],
+  messages: {
+    en: customEn,
+    ru: customRu,
+  },
+});
 
 const router = createRouter({
   routes,
@@ -28,6 +40,7 @@ const pinia = createPinia();
 
 app.use(pinia);
 app.use(router);
+app.use(i18n);
 app.use(ui);
 
 app.mount('#app');
