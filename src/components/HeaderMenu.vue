@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LoginSign from './LoginSign.vue';
+import ToggleColorScheme from './ToggleColorScheme.vue';
 </script>
 
 <template>

@@ -21,7 +21,7 @@ export async function GetUserByLogin(login: string): Promise<User | null> {
 
     return {
       login,
-      id: user.userid,
+      id: user.userid.toString(),
       gender: user.gender,
       registrationDate: user.registration,
       groups: user.groups,
