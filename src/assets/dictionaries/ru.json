@@ -1,0 +1,56 @@
+{
+  "header": {
+    "title": "PrettyWiki",
+    "subtitle": "Красивая энциклопедия"
+  },
+  "footer": {
+    "copyright": "© {author}, {year}",
+    "sources": "Источники"
+  },
+  "login": {
+    "header": {
+      "signIn": "Вход в PrettyWiki",
+      "signUp": "Регистрация в PrettyWiki"
+    },
+    "signInTab": "Вход",
+    "signUpTab": "Регистрация",
+    "signInAction": "Войти",
+    "signUpAction": "Зарегистрироваться",
+    "signOut": "Выйти",
+    "toMain": "На главную",
+    "alreadySignedIn": {
+      "title": "Вы уже вошли в систему!",
+      "description": "Вы уже выполнили вход в систему с логином {login}. Хотите выйти из аккаунта?"
+    },
+    "userDoesntExist": "Пользователь не существует",
+    "registrationUnavailable": {
+      "title": "Регистрация невозможна",
+      "description": "Wikipedia API пока не поддерживает регистрацию пользователей со сторонних ресурсов."
+    }
+  },
+  "signIn": {
+    "username": "Имя пользователя",
+    "usernamePlaceholder": "PrettyMade",
+    "password": "Пароль",
+    "passwordPlaceholder": "Qwerty123",
+    "showPassword": "Показать пароль"
+  },
+  "signUp": {
+    "username": "Имя пользователя",
+    "usernamePlaceholder": "PrettyMade",
+    "password": "Пароль",
+    "passwordPlaceholder": "Qwerty123",
+    "email": "Эл. адрес",
+    "emailPlaceholder": "pretty_made{at}gmail.com",
+    "showPassword": "Показать пароль",
+    "clearInput": "Очистить поле"
+  },
+  "zod": {
+    "loginMin": "Логин не может быть короче 5 символов",
+    "loginMax": "Логин не может быть длиннее 32 символов",
+    "passwordMin": "Пароль должен быть не менее 8 символов",
+    "passwordMax": "Пароль не может быть больше 32 символов",
+    "emailValid": "Введите корректный адрес эл. почты",
+    "emailMax": "Адрес эл. почты не может быть больше 32 символов"
+  }
+}

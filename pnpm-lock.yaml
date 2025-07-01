@@ -40,6 +40,9 @@ importers:
       vue:
         specifier: ^3.5.17
         version: 3.5.17(typescript@5.8.3)
+      vue-i18n:
+        specifier: ^11.1.7
+        version: 11.1.7(vue@3.5.17(typescript@5.8.3))
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.17(typescript@5.8.3))
@@ -74,6 +77,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.6.13
         version: 0.6.13(prettier@3.6.2)
+      prettier-plugin-vue:
+        specifier: ^1.1.6
+        version: 1.1.6
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -545,6 +551,27 @@ packages:
       {
         integrity: sha512-p+Zh1sb6EfrfVaS86jlHGQ9HA66fJhV9x5LiE5vCbZtXEHAuhcmUZUdZ4WrFpUBfNalr2OkAJI5AcKEQF+Lebw==,
       }
+
+  '@intlify/core-base@11.1.7':
+    resolution:
+      {
+        integrity: sha512-gYiGnQeJVp3kNBeXQ73m1uFOak0ry4av8pn+IkEWigyyPWEMGzB+xFeQdmGMFn49V+oox6294oGVff8bYOhtOw==,
+      }
+    engines: { node: '>= 16' }
+
+  '@intlify/message-compiler@11.1.7':
+    resolution:
+      {
+        integrity: sha512-0ezkep1AT30NyuKj8QbRlmvMORCCRlOIIu9v8RNU8SwDjjTiFCZzczCORMns2mCH4HZ1nXgrfkKzYUbfjNRmng==,
+      }
+    engines: { node: '>= 16' }
+
+  '@intlify/shared@11.1.7':
+    resolution:
+      {
+        integrity: sha512-4yZeMt2Aa/7n5Ehy4KalUlvt3iRLcg1tq9IBVfOgkyWFArN4oygn6WxgGIFibP3svpaH8DarbNaottq+p0gUZQ==,
+      }
+    engines: { node: '>= 16' }
 
   '@isaacs/fs-minipass@4.0.1':
     resolution:
@@ -3125,6 +3152,20 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
+  prettier-plugin-vue@1.1.6:
+    resolution:
+      {
+        integrity: sha512-trQ/oY+6hSsGe2zPIFThXMIM0TbxMEbk2VOrKjwHWuSz7OEo0rnumbz9a47OxVPCaAnGY9vZG8qDTiTmk9bq0A==,
+      }
+
+  prettier@2.8.8:
+    resolution:
+      {
+        integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==,
+      }
+    engines: { node: '>=10.13.0' }
+    hasBin: true
+
   prettier@3.6.2:
     resolution:
       {
@@ -3746,6 +3787,15 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
+  vue-i18n@11.1.7:
+    resolution:
+      {
+        integrity: sha512-CDrU7Cmyh1AxJjerQmipV9nVa//exVBdhTcWGlbfcDCN8bKp/uAe7Le6IoN4//5emIikbsSKe9Uofmf/xXkhOA==,
+      }
+    engines: { node: '>= 16' }
+    peerDependencies:
+      vue: ^3.0.0
+
   vue-router@4.5.1:
     resolution:
       {
@@ -4074,6 +4124,18 @@ snapshots:
   '@internationalized/number@3.6.3':
     dependencies:
       '@swc/helpers': 0.5.17
+
+  '@intlify/core-base@11.1.7':
+    dependencies:
+      '@intlify/message-compiler': 11.1.7
+      '@intlify/shared': 11.1.7
+
+  '@intlify/message-compiler@11.1.7':
+    dependencies:
+      '@intlify/shared': 11.1.7
+      source-map-js: 1.2.1
+
+  '@intlify/shared@11.1.7': {}
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
@@ -5697,6 +5759,12 @@ snapshots:
     dependencies:
       prettier: 3.6.2
 
+  prettier-plugin-vue@1.1.6:
+    dependencies:
+      prettier: 2.8.8
+
+  prettier@2.8.8: {}
+
   prettier@3.6.2: {}
 
   proxy-from-env@1.1.0: {}
@@ -6061,6 +6129,13 @@ snapshots:
       semver: 7.7.2
     transitivePeerDependencies:
       - supports-color
+
+  vue-i18n@11.1.7(vue@3.5.17(typescript@5.8.3)):
+    dependencies:
+      '@intlify/core-base': 11.1.7
+      '@intlify/shared': 11.1.7
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.17(typescript@5.8.3)
 
   vue-router@4.5.1(vue@3.5.17(typescript@5.8.3)):
     dependencies:

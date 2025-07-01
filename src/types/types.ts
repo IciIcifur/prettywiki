@@ -5,3 +5,5 @@ export interface User {
   groups?: string[];
   registrationDate?: string;
 }
+
+export type AvailableLocales = 'ru' | 'en';

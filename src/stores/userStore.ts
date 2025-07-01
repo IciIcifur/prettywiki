@@ -8,7 +8,10 @@ import {
 import { GetUserByLogin } from '../api/userAPI.ts';
 
 export const useUserStore = defineStore('user', {
-  state: (): { isAuthenticated: boolean; user: null | User } => ({
+  state: (): {
+    isAuthenticated: boolean;
+    user: null | User;
+  } => ({
     isAuthenticated: false,
     user: null,
   }),

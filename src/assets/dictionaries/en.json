@@ -1,0 +1,56 @@
+{
+  "header": {
+    "title": "PrettyWiki",
+    "subtitle": "The Beautiful Encyclopedia"
+  },
+  "footer": {
+    "copyright": "© {author}, {year}",
+    "sources": "Sources"
+  },
+  "login": {
+    "header": {
+      "signIn": "Log in PrettyWiki",
+      "signUp": "Register in PrettyWiki"
+    },
+    "signInTab": "Sign In",
+    "signUpTab": "Sign Up",
+    "signInAction": "Sign In",
+    "signUpAction": "Register",
+    "signOut": "Sign Out",
+    "toMain": "To Main",
+    "alreadySignedIn": {
+      "title": "You are already signed in!",
+      "description": "You are already signed in with the username {login}. Do you want to sign out?"
+    },
+    "userDoesntExist": "User does not exist",
+    "registrationUnavailable": {
+      "title": "Registration unavailable",
+      "description": "The Wikipedia API does not currently support user registration from third-party resources."
+    }
+  },
+  "signIn": {
+    "username": "Username",
+    "usernamePlaceholder": "PrettyMade",
+    "password": "Password",
+    "passwordPlaceholder": "Qwerty123",
+    "showPassword": "Show password"
+  },
+  "signUp": {
+    "username": "Username",
+    "usernamePlaceholder": "PrettyMade",
+    "password": "Password",
+    "passwordPlaceholder": "Qwerty123",
+    "email": "Email",
+    "emailPlaceholder": "pretty_made{at}gmail.com",
+    "showPassword": "Show password",
+    "clearInput": "Clear input"
+  },
+  "zod": {
+    "loginMin": "Username must be at least 5 characters long",
+    "loginMax": "Username cannot be longer than 32 characters",
+    "passwordMin": "Password must be at least 8 characters long",
+    "passwordMax": "Password cannot be longer than 32 characters",
+    "emailValid": "Enter a valid email address",
+    "emailMax": "Email address cannot be longer than 32 characters"
+  }
+}
