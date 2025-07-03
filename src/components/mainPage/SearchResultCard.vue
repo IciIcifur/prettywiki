@@ -1,15 +1,32 @@
 <script setup lang="ts">
-  defineProps({ title: String, firstLine: String, url: String });
+  import { useI18n } from 'vue-i18n';
+
+  const { locale } = useI18n();
+  const props = defineProps({
+    title: String,
+    firstLine: String,
+    lastUpdated: String,
+  });
+
+  const date = new Date(props.lastUpdated);
+  const localizedDate = date.toLocaleDateString(locale.value, {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
 </script>
 
 <template>
   <UButton
-    :to="url"
+    :to="`/wiki/${title?.replace(' ', '_')}`"
     variant="ghost"
     color="neutral"
     class="flex w-full flex-col items-start p-2"
   >
     <p class="text-indigo-500 dark:text-indigo-300">{{ title }}</p>
-    <p class="line-clamp-2 text-xs">{{ firstLine }}</p>
+    <p class="line-clamp-2 w-full text-start text-xs" v-html="firstLine" />
+    <p class="w-full text-end text-xs text-neutral-500 italic">
+      {{ localizedDate }}
+    </p>
   </UButton>
 </template>

@@ -7,6 +7,16 @@
     "copyright": "© {author}, {year}",
     "sources": "Sources"
   },
+  "main": {
+    "greeting": {
+      "title": "Welcome to PrettyWiki,",
+      "description": "the beautiful encyclopedia you can't edit."
+    },
+    "search": {
+      "placeholder": "Start searching for something...",
+      "nothingFound": "Nothing found"
+    }
+  },
   "login": {
     "header": {
       "signIn": "Log in PrettyWiki",

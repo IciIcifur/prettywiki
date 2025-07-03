@@ -12,7 +12,11 @@
 </script>
 
 <template>
-  <UForm :schema="signUpFormSchema" :state="state" class="flex w-full flex-col gap-2 pt-2">
+  <UForm
+    :schema="signUpFormSchema"
+    :state="state"
+    class="flex w-full flex-col gap-2 pt-2"
+  >
     <UFormField :label="t('signUp.username')" name="login" size="sm" required>
       <UInput
         icon="i-lucide-circle-user"
@@ -38,7 +42,12 @@
       </template>
     </UFormField>
 
-    <UFormField :label="t('signUp.password')" name="password" size="sm" required>
+    <UFormField
+      :label="t('signUp.password')"
+      name="password"
+      size="sm"
+      required
+    >
       <UInput
         icon="i-lucide-lock"
         v-model="state.password"

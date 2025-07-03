@@ -1,41 +1,30 @@
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
+  import { ref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { debouncedWatch } from '@vueuse/core';
+  import { SearchForPage } from '../../api/contentAPI.ts';
 
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const searchValue = ref('');
   const isLoading = ref(false);
   const isResultOpen = ref(false);
 
-  const searchResults = reactive<
-    { title: string; firstLine: string; url: string }[]
-  >([
-    {
-      title: 'Римская империя',
-      firstLine:
-        'Ри́мская импе́рия (лат. Imperium Romanum, греч. Βασιλεία Ῥωμαίων) — постреспубликанский период истории Древнего Рима. Как государство Римская империя включала большие территориальные владения вокруг Средиземного моря в Европе,',
-      url: '/',
-    },
-    {
-      title: 'Римская империя',
-      firstLine:
-        'Ри́мская импе́рия (лат. Imperium Romanum, греч. Βασιλεία Ῥωμαίων) — постреспубликанский период истории Древнего Рима. Как государство Римская империя включала большие территориальные владения вокруг Средиземного моря в Европе,',
-      url: '/login',
-    },
-  ]);
+  const searchResults = ref<
+    { title: string; firstLine: string; lastUpdated: string }[]
+  >([]);
 
   debouncedWatch(
     searchValue,
-    () => {
+    async () => {
       isResultOpen.value = false;
       isLoading.value = true;
 
-      setTimeout(() => {
-        isLoading.value = false;
-        isResultOpen.value = true;
-      }, 1000);
+      const result = await SearchForPage(searchValue.value, locale.value);
+      if (result) searchResults.value = result;
+
+      isLoading.value = false;
+      isResultOpen.value = true;
     },
     { debounce: 400 }
   );
@@ -57,16 +46,16 @@
         />
       </template>
       <template #content>
-        <div class="h-fit w-sm sm:w-md">
+        <div class="h-fit w-sm overflow-clip rounded-md">
           <div
             v-if="searchResults.length"
-            class="flex h-fit max-h-80 w-full flex-col p-4"
+            class="flex h-fit max-h-96 w-full flex-col overflow-y-scroll p-4"
           >
             <SearchResultCard
               v-for="item of searchResults"
               :title="item.title"
               :first-line="item.firstLine"
-              :url="item.url"
+              :last-updated="item.lastUpdated"
             />
           </div>
           <div v-else class="flex w-full items-center justify-center gap-2 p-4">
