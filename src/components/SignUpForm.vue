@@ -12,11 +12,7 @@
 </script>
 
 <template>
-  <UForm
-    :schema="signUpFormSchema"
-    :state="state"
-    class="flex w-full flex-col gap-2 pt-2"
-  >
+  <UForm :schema="signUpFormSchema" :state="state" class="flex w-full flex-col gap-2 pt-2">
     <UFormField :label="t('signUp.username')" name="login" size="sm" required>
       <UInput
         icon="i-lucide-circle-user"
@@ -24,7 +20,7 @@
         variant="soft"
         :placeholder="t('signUp.usernamePlaceholder')"
         class="w-full"
-        size="lg"
+        size="xl"
       >
         <template v-if="state.login?.length" #trailing>
           <UButton
@@ -42,12 +38,7 @@
       </template>
     </UFormField>
 
-    <UFormField
-      :label="t('signUp.password')"
-      name="password"
-      size="sm"
-      required
-    >
+    <UFormField :label="t('signUp.password')" name="password" size="sm" required>
       <UInput
         icon="i-lucide-lock"
         v-model="state.password"
@@ -55,7 +46,7 @@
         :placeholder="t('signUp.passwordPlaceholder')"
         :type="passwordVisible ? 'text' : 'password'"
         class="w-full"
-        size="lg"
+        size="xl"
       >
         <template #trailing>
           <UButton
@@ -78,13 +69,9 @@
         icon="i-lucide-mail"
         v-model="state.email"
         variant="soft"
-        :placeholder="
-          t('signUp.emailPlaceholder', {
-            at: '@',
-          })
-        "
+        :placeholder="t('signUp.emailPlaceholder', { at: '@' })"
         class="w-full"
-        size="lg"
+        size="xl"
       >
         <template v-if="state.email?.length" #trailing>
           <UButton

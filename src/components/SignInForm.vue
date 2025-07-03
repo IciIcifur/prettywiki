@@ -22,7 +22,7 @@
         variant="soft"
         :placeholder="t('signIn.usernamePlaceholder')"
         class="w-full"
-        size="lg"
+        size="xl"
       >
         <template v-if="state.login?.length" #trailing>
           <UButton
@@ -48,7 +48,7 @@
         :placeholder="t('signIn.passwordPlaceholder')"
         :type="passwordVisible ? 'text' : 'password'"
         class="w-full"
-        size="lg"
+        size="xl"
       >
         <template #trailing>
           <UButton
