@@ -3,6 +3,7 @@
   import { useI18n } from 'vue-i18n';
   import { debouncedWatch } from '@vueuse/core';
   import { SearchForPage } from '../../api/contentAPI.ts';
+  import BottomMenu from './BottomMenu.vue';
 
   const { t, locale } = useI18n();
 
@@ -31,8 +32,8 @@
 </script>
 
 <template>
-  <div class="flex w-full justify-end">
-    <UPopover v-model:open="isResultOpen">
+  <div class="flex w-full flex-col items-center justify-center gap-2">
+    <UPopover v-model:open="isResultOpen" :content="{ align: 'start' }">
       <template #anchor>
         <UInput
           v-model="searchValue"
@@ -42,14 +43,14 @@
           color="error"
           :placeholder="t('main.search.placeholder')"
           size="xl"
-          class="text-md w-full max-w-md"
+          class="text-md w-full"
         />
       </template>
       <template #content>
-        <div class="h-fit w-sm overflow-clip rounded-md">
+        <div class="h-fit max-w-sm overflow-clip rounded-md sm:max-w-lg">
           <div
             v-if="searchResults.length"
-            class="flex h-fit max-h-96 w-full flex-col overflow-y-scroll p-4"
+            class="flex h-fit max-h-96 flex-col overflow-y-scroll p-4"
           >
             <SearchResultCard
               v-for="item of searchResults"
@@ -65,5 +66,6 @@
         </div>
       </template>
     </UPopover>
+    <BottomMenu />
   </div>
 </template>

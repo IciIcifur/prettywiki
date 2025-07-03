@@ -6,11 +6,13 @@
 </script>
 
 <template>
-  <div class="flex w-full flex-col">
-    <div class="flex w-full flex-col justify-center py-8">
-      <h1>{{ t('main.greeting.title') }}</h1>
-      <p>{{ t('main.greeting.description') }}</p>
+  <div class="flex w-full flex-col items-center">
+    <div class="flex w-fit flex-col items-center">
+      <div class="flex w-fit flex-col items-start justify-center py-8">
+        <h1>{{ t('main.greeting.title') }}</h1>
+        <p class="w-full sm:text-end">{{ t('main.greeting.description') }}</p>
+      </div>
+      <Search />
     </div>
-    <Search />
   </div>
 </template>

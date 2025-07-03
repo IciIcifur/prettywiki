@@ -14,7 +14,14 @@
     },
     "search": {
       "placeholder": "Start searching for something...",
-      "nothingFound": "Nothing found"
+      "nothingFound": "Nothing found",
+      "bottomMenu": {
+        "featured": "Featured articles",
+        "contents": "Contents",
+        "random": "Random article",
+        "news": "Recent news",
+        "donate": "Donate to resource"
+      }
     }
   },
   "login": {
