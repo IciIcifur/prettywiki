@@ -6,7 +6,8 @@
 </script>
 
 <template>
-  <div class="flex w-full flex-col items-center">
+  <div class="flex w-full flex-col items-center gap-8 pt-8">
+    <TimeLine />
     <div class="flex w-fit flex-col items-center">
       <div class="flex w-fit flex-col items-start justify-center py-8">
         <h1>{{ t('main.greeting.title') }}</h1>

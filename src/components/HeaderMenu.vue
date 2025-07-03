@@ -15,7 +15,7 @@
     <div class="flex h-fit flex-col items-start justify-center">
       <ULink
         to="/"
-        class="font-cormorant text-4xl font-black text-indigo-500 transition-colors hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-500"
+        class="font-cormorant text-primary hover:dark:text-primary-500 hover:text-primary-400 text-4xl font-black transition-colors"
       >
         <p>
           {{ t('header.title') }}

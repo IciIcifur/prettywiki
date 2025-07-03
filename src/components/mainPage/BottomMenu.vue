@@ -40,7 +40,7 @@
 </script>
 
 <template>
-  <div class="flex w-full gap-1 py-2 sm:max-w-xl">
+  <div class="flex w-full gap-1 py-1 sm:max-w-xl">
     <UTooltip v-for="item in menuItems" :text="item.tooltip">
       <UButton
         :to="item.to"

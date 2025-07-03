@@ -58,7 +58,7 @@
   });
   const alreadySignedInDescription = computed(() =>
     t('login.alreadySignedIn.description', {
-      login: `<span class="font-medium text-cyan-500 dark:text-cyan-400">${
+      login: `<span class="font-medium text-secondary">${
         userStore.user?.login
       }</span>`,
     })

@@ -11,7 +11,10 @@ export default defineConfig({
         colors: {
           primary: 'indigo',
           secondary: 'cyan',
-          error: 'rose',
+          warning: 'yellow',
+          error: 'red',
+          info: 'blue',
+          success: 'emerald',
           neutral: 'neutral',
         },
       },
