@@ -41,15 +41,19 @@
 
 <template>
   <div class="flex w-full gap-1 py-1 sm:max-w-xl">
-    <UTooltip v-for="item in menuItems" :text="item.tooltip">
+    <UTooltip
+      v-for="item in menuItems"
+      :key="item.tooltip"
+      :text="item.tooltip"
+    >
       <UButton
-        :to="item.to"
-        :color="item.color"
-        variant="ghost"
-        size="xl"
         class="w-full justify-center"
+        :color="item.color"
+        size="xl"
+        :to="item.to"
+        variant="ghost"
       >
-        <UIcon :name="item.icon" :class="`text-${item.color} size-6`" />
+        <UIcon :class="`text-${item.color} size-6`" :name="item.icon" />
       </UButton>
     </UTooltip>
   </div>

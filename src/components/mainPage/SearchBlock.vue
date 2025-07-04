@@ -33,17 +33,17 @@
 
 <template>
   <div class="flex w-full flex-col items-center justify-center gap-2">
-    <UPopover v-model:open="isResultOpen" :content="{ align: 'start' }">
+    <UPopover v-model:open="isResultOpen" content.align="start">
       <template #anchor>
         <UInput
           v-model="searchValue"
-          :loading="isLoading"
-          icon="i-lucide-search"
-          variant="soft"
+          class="text-md w-full"
           color="error"
+          icon="i-lucide-search"
+          :loading="isLoading"
           :placeholder="t('main.search.placeholder')"
           size="xl"
-          class="text-md w-full"
+          variant="soft"
         />
       </template>
       <template #content>
@@ -53,14 +53,15 @@
             class="flex h-fit max-h-96 flex-col overflow-y-scroll p-4"
           >
             <SearchResultCard
-              v-for="item of searchResults"
-              :title="item.title"
+              v-for="(item, index) of searchResults"
+              :key="index"
               :first-line="item.firstLine"
               :last-updated="item.lastUpdated"
+              :title="item.title"
             />
           </div>
           <div v-else class="flex w-full items-center justify-center gap-2 p-4">
-            <UIcon name="i-lucide-frown" class="size-5" />
+            <UIcon class="size-5" name="i-lucide-frown" />
             <p>{{ t('main.search.nothingFound') }}</p>
           </div>
         </div>

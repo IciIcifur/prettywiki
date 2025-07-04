@@ -4,8 +4,8 @@
   import { GetForThisDay } from '../../api/contentAPI.ts';
   import { useI18n } from 'vue-i18n';
 
-  const { t, locale } = useI18n();
-  const scrollRef = ref(null);
+  const { locale } = useI18n();
+  const scrollRef = ref<null | HTMLElement>(null);
 
   const items = ref<TimelineItem[]>([]);
 
@@ -19,6 +19,8 @@
     const result = await GetForThisDay(locale.value);
     if (result) items.value = result;
     else items.value = [];
+
+    scrollToRight();
   }
 
   onMounted(async () => {
@@ -34,8 +36,6 @@
   watch(locale, async () => {
     await loadItems();
   });
-
-  watch(items, scrollToRight);
 </script>
 
 <template>
@@ -51,12 +51,12 @@
       class="hide-scrollbar flex w-full overflow-x-auto scroll-smooth pl-40"
     >
       <UTimeline
-        orientation="horizontal"
-        :ui="{ item: 'w-80 ', description: 'line-clamp-3' }"
+        class="w-fit"
         :default-value="2"
         :items="items"
-        class="w-fit"
+        orientation="horizontal"
         size="lg"
+        :ui="{ item: 'w-80 ', description: 'line-clamp-3' }"
       />
       <div class="hidden min-w-[30%] sm:flex" />
     </div>

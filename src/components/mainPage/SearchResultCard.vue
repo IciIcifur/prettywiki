@@ -18,10 +18,10 @@
 
 <template>
   <UButton
+    class="flex w-full flex-col items-start p-2"
+    color="neutral"
     :to="`/wiki/${title?.replace(' ', '_')}`"
     variant="ghost"
-    color="neutral"
-    class="flex w-full flex-col items-start p-2"
   >
     <p class="text-primary">{{ title }}</p>
     <p class="line-clamp-2 w-full text-start text-xs" v-html="firstLine" />

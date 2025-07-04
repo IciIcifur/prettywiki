@@ -7,26 +7,26 @@
 <template>
   <UButton
     v-if="!userStore.isAuthenticated"
-    to="/login"
-    icon="i-lucide-log-in"
     color="secondary"
+    icon="i-lucide-log-in"
+    to="/login"
     variant="soft"
   />
   <template v-else>
     <UButton
-      to="/login"
-      :label="userStore.user?.login"
-      color="secondary"
-      variant="link"
-      icon="i-lucide-circle-user"
       class="hidden sm:flex"
+      color="secondary"
+      icon="i-lucide-circle-user"
+      :label="userStore.user?.login"
+      to="/login"
+      variant="link"
     />
     <UButton
-      to="/login"
-      color="secondary"
-      variant="soft"
-      icon="i-lucide-circle-user"
       class="flex sm:hidden"
+      color="secondary"
+      icon="i-lucide-circle-user"
+      to="/login"
+      variant="soft"
     />
   </template>
 </template>

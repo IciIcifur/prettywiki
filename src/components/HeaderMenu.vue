@@ -14,8 +14,8 @@
   >
     <div class="flex h-fit flex-col items-start justify-center">
       <ULink
-        to="/"
         class="font-cormorant text-primary hover:dark:text-primary-500 hover:text-primary-400 text-4xl font-black transition-colors"
+        to="/"
       >
         <p>
           {{ t('header.title') }}
@@ -31,13 +31,13 @@
       <ToggleColorScheme />
     </div>
     <UDropdownMenu
+      class="flex sm:hidden"
       :items="menuItems"
       :ui="{
         content: 'min-w-fit z-40 justify-center align-center',
       }"
-      class="flex sm:hidden"
     >
-      <UButton icon="i-lucide-menu" color="secondary" variant="soft" />
+      <UButton color="secondary" icon="i-lucide-menu" variant="soft" />
 
       <template #locale>
         <div class="flex h-full w-full items-center justify-center">

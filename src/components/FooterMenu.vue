@@ -15,14 +15,14 @@
 
     <div class="flex h-fit items-center justify-center gap-1">
       <UButton
+        icon="i-lucide-send"
         to="https://t.me/icicle_icifur"
         variant="link"
-        icon="i-lucide-send"
       />
       <UButton
+        icon="i-lucide-github"
         to="https://github.com/IciIcifur/prettywiki"
         variant="link"
-        icon="i-lucide-github"
       />
     </div>
   </footer>

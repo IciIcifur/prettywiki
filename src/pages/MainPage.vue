@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import Search from '../components/mainPage/Search.vue';
+  import Search from '../components/mainPage/SearchBlock.vue';
 
   const { t } = useI18n();
 </script>

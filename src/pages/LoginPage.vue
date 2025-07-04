@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useUserStore } from '../stores/userStore.ts';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, ref } from 'vue';
   import type {
     SignInFormSchemaType,
     SignUpFormSchemaType,
@@ -16,11 +16,11 @@
 
   const activeTab = ref('0');
 
-  const signInFormValue = reactive<SignInFormSchemaType>({
+  const signInFormValue = ref<SignInFormSchemaType>({
     login: '',
     password: '',
   });
-  const signUpFormValue = reactive<SignUpFormSchemaType>({
+  const signUpFormValue = ref<SignUpFormSchemaType>({
     login: '',
     password: '',
     email: undefined,
@@ -28,7 +28,7 @@
 
   async function onSubmit() {
     if (activeTab.value === '0') {
-      const userData = await GetUserByLogin(signInFormValue.login);
+      const userData = await GetUserByLogin(signInFormValue.value.login);
       if (userData) userStore.login(userData);
       else toast.add({ color: 'error', title: t('login.userDoesntExist') });
     } else {
@@ -49,8 +49,9 @@
   );
   const actionDisabled = computed<boolean>(() => {
     try {
-      if (activeTab.value === '0') signInFormSchema.parse(signInFormValue);
-      else signUpFormSchema.parse(signUpFormValue);
+      if (activeTab.value === '0')
+        signInFormSchema.parse(signInFormValue.value);
+      else signUpFormSchema.parse(signUpFormValue.value);
       return false;
     } catch {
       return true;
@@ -77,13 +78,13 @@
       <template #footer>
         <div class="flex h-8 justify-between gap-4">
           <UButton
-            @click="userStore.logout"
+            color="error"
             :label="t('login.signOut')"
             size="lg"
             variant="ghost"
-            color="error"
+            @click="userStore.logout"
           />
-          <UButton to="/" :label="t('login.toMain')" variant="link" />
+          <UButton :label="t('login.toMain')" to="/" variant="link" />
         </div>
       </template>
     </UCard>
@@ -97,26 +98,26 @@
           }}
         </h4>
       </template>
-      <UTabs v-model="activeTab" :items="items" color="neutral" class="w-full">
+      <UTabs v-model="activeTab" class="w-full" color="neutral" :items="items">
         <template #content="{ index }">
-          <SignInForm v-if="index == 0" :state="signInFormValue" />
-          <SignUpForm v-else :state="signUpFormValue" />
+          <SignInForm v-if="index == 0" v-model:state="signInFormValue" />
+          <SignUpForm v-else v-model:state="signUpFormValue" />
         </template>
       </UTabs>
 
       <template #footer>
         <div class="flex h-8 items-center justify-between gap-4">
           <UButton
-            to="/"
-            :label="t('login.toMain')"
-            variant="link"
             color="neutral"
+            :label="t('login.toMain')"
+            to="/"
+            variant="link"
           />
           <UButton
-            @click.prevent="onSubmit"
             :disabled="actionDisabled"
             :label="actionText"
             variant="solid"
+            @click.prevent="onSubmit"
           />
         </div>
       </template>
