@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
   import type { TimelineItem } from '@nuxt/ui/components/Timeline.vue';
-  import { GetForThisDay } from '../../api/contentAPI.ts';
+  import { GetHistoryForThisDay } from '../../api/contentAPI.ts';
   import { useI18n } from 'vue-i18n';
   import { useTimelineCenterIndex } from '../../composibles/useTimelineCentralIndex.ts';
 
@@ -25,7 +25,7 @@
   };
 
   async function loadItems() {
-    const result = await GetForThisDay(i18n.locale.value);
+    const result = await GetHistoryForThisDay(i18n.locale.value);
     if (result) items.value = result;
     else items.value = [];
   }
@@ -56,10 +56,10 @@
     </h1>
     <div class="relative flex h-fit w-full justify-start overflow-clip">
       <div
-        class="pointer-events-none absolute top-0 left-0 z-10 h-full w-40 bg-gradient-to-r from-[var(--ui-bg)] to-transparent"
+        class="pointer-events-none absolute top-0 left-0 z-10 h-full w-20 bg-gradient-to-r from-[var(--ui-bg)] to-transparent sm:w-40"
       />
       <div
-        class="pointer-events-none absolute top-0 right-0 z-10 h-full w-40 bg-gradient-to-l from-[var(--ui-bg)] to-transparent"
+        class="pointer-events-none absolute top-0 right-0 z-10 h-full w-20 bg-gradient-to-l from-[var(--ui-bg)] to-transparent sm:w-40"
       />
       <div
         ref="scrollRef"
@@ -81,7 +81,7 @@
           <template #title="{ item }">
             <ULink
               :to="`/wiki/${item.title.replace(' ', '_')}`"
-              class="hover:text-primary text-[var(--ui-text)] transition-colors"
+              class="hover:text-primary line-clamp-1 w-full text-[var(--ui-text)] transition-colors"
             >
               {{ item.title }}
             </ULink>
