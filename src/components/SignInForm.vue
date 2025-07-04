@@ -18,27 +18,27 @@
 
 <template>
   <UForm
-    class="flex w-full flex-col gap-2 pt-2"
     :schema="signInFormSchema"
     :state="state"
+    class="flex w-full flex-col gap-2 pt-2"
   >
     <UFormField :label="t('signIn.username')" name="login" size="sm">
       <UInput
         v-model="state.login"
+        :placeholder="t('signIn.usernamePlaceholder')"
         class="w-full"
         icon="i-lucide-circle-user"
-        :placeholder="t('signIn.usernamePlaceholder')"
         size="xl"
         variant="soft"
       >
-        <template v-if="state.login?.length" #trailing>
+        <template #trailing v-if="state.login?.length">
           <UButton
+            @click="state.login = ''"
             aria-label="Clear input"
             color="neutral"
             icon="i-lucide-x"
             size="sm"
             variant="ghost"
-            @click="state.login = ''"
           />
         </template>
       </UInput>
@@ -50,21 +50,21 @@
     <UFormField :label="t('signIn.password')" name="password" size="sm">
       <UInput
         v-model="state.password"
+        :placeholder="t('signIn.passwordPlaceholder')"
+        :type="passwordVisible ? 'text' : 'password'"
         class="w-full"
         icon="i-lucide-lock"
-        :placeholder="t('signIn.passwordPlaceholder')"
         size="xl"
-        :type="passwordVisible ? 'text' : 'password'"
         variant="soft"
       >
         <template #trailing>
           <UButton
+            @click.stop="passwordVisible = !passwordVisible"
             :aria-label="t('signIn.showPassword')"
-            color="neutral"
             :icon="passwordVisible ? 'i-lucide-eye' : 'i-lucide-eye-closed'"
+            color="neutral"
             size="sm"
             variant="ghost"
-            @click.stop="passwordVisible = !passwordVisible"
           />
         </template>
       </UInput>

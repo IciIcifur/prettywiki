@@ -31,11 +31,11 @@
       <ToggleColorScheme />
     </div>
     <UDropdownMenu
-      class="flex sm:hidden"
       :items="menuItems"
       :ui="{
         content: 'min-w-fit z-40 justify-center align-center',
       }"
+      class="flex sm:hidden"
     >
       <UButton color="secondary" icon="i-lucide-menu" variant="soft" />
 

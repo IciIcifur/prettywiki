@@ -13,10 +13,10 @@
 
 <template>
   <UButton
-    color="secondary"
-    :label="localeStore.locale.value.toUpperCase()"
-    variant="soft"
     @click.stop="toggleLocale"
+    :label="localeStore.locale.value.toUpperCase()"
+    color="secondary"
+    variant="soft"
   />
 </template>
 

@@ -14,7 +14,30 @@ export default defineConfig([
     files: ['**/*.vue'],
     languageOptions: { parserOptions: { parser: tseslint.parser } },
     rules: {
-      'vue/attributes-order': ['warn', { alphabetical: true }],
+      'vue/attributes-order': [
+        'warn',
+        {
+          order: [
+            'UNIQUE',
+            'SLOT',
+
+            'EVENTS',
+            'LIST_RENDERING',
+            'CONDITIONALS',
+            'TWO_WAY_BINDING',
+            'OTHER_DIRECTIVES',
+
+            'CONTENT',
+            'DEFINITION',
+            'RENDER_MODIFIERS',
+            'GLOBAL',
+
+            'ATTR_DYNAMIC',
+            'ATTR_STATIC',
+          ],
+          alphabetical: true,
+        },
+      ],
     },
   },
   {

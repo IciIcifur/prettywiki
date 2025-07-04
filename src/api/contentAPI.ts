@@ -1,4 +1,5 @@
 import axios from 'axios';
+import PickTimeLineIcon from '../utils/timelineIcon.ts';
 
 const API_URI = 'https://_.wikipedia.org/w/api.php';
 
@@ -13,14 +14,21 @@ export async function GetForThisDay(locale: string) {
     const data: any[] = result.data.events;
 
     return data.reverse().map((value) => {
-      const title = !!value.pages.length
-        ? value.pages[value.pages.length > 1 ? 1 : 0].title
-        : value.year;
+      const title: string = (
+        !!value.pages.length
+          ? value.pages[value.pages.length > 1 ? 1 : 0].title
+          : value.year
+      ).toString();
       return {
-        title: title.replace('_', ' '),
-        description: value.text,
+        title: title.replace(/_/g, ' '),
+        description: value.text
+          ? value.text[0].toUpperCase() + value.text.slice(1)
+          : '',
         date: value.year,
-        icon: 'i-lucide-rocket',
+        icon: PickTimeLineIcon(
+          value.pages.map((page: any) => page.title),
+          value.text
+        ),
       };
     });
   } catch {

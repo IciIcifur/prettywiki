@@ -10,9 +10,9 @@
 
 <template>
   <UButton
-    color="secondary"
-    :icon="colorMode == 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
-    variant="soft"
     @click.stop="toggleScheme"
+    :icon="colorMode == 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
+    color="secondary"
+    variant="soft"
   />
 </template>

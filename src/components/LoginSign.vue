@@ -14,10 +14,10 @@
   />
   <template v-else>
     <UButton
+      :label="userStore.user?.login"
       class="hidden sm:flex"
       color="secondary"
       icon="i-lucide-circle-user"
-      :label="userStore.user?.login"
       to="/login"
       variant="link"
     />

@@ -22,6 +22,9 @@
         "news": "Recent news",
         "donate": "Donate to resource"
       }
+    },
+    "timeline": {
+      "title": "On that day..."
     }
   },
   "login": {

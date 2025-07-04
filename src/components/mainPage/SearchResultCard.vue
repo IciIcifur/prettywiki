@@ -10,7 +10,7 @@
 
   const date = new Date(props.lastUpdated as string);
   const localizedDate = date.toLocaleDateString(locale.value, {
-    day: '2-digit',
+    day: 'numeric',
     month: 'long',
     year: 'numeric',
   });
@@ -18,13 +18,13 @@
 
 <template>
   <UButton
+    :to="`/wiki/${title?.replace(' ', '_')}`"
     class="flex w-full flex-col items-start p-2"
     color="neutral"
-    :to="`/wiki/${title?.replace(' ', '_')}`"
     variant="ghost"
   >
     <p class="text-primary">{{ title }}</p>
-    <p class="line-clamp-2 w-full text-start text-xs" v-html="firstLine" />
+    <p v-html="firstLine" class="line-clamp-2 w-full text-start text-xs" />
     <p class="w-full text-end text-xs text-neutral-400 italic">
       {{ localizedDate }}
     </p>

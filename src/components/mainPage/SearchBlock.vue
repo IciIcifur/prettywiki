@@ -35,18 +35,18 @@
   <div class="flex w-full flex-col items-center justify-center gap-2">
     <UPopover
       v-model:open="isResultOpen"
+      :closeDelay="10"
       :content="{ align: 'start' }"
       :openDelay="10"
-      :closeDelay="10"
     >
       <template #anchor>
         <UInput
           v-model="searchValue"
+          :loading="isLoading"
+          :placeholder="t('main.search.placeholder')"
           class="text-md w-full"
           color="error"
           icon="i-lucide-search"
-          :loading="isLoading"
-          :placeholder="t('main.search.placeholder')"
           size="xl"
           variant="soft"
         />
@@ -58,8 +58,8 @@
             class="flex h-fit max-h-96 flex-col overflow-y-scroll p-4"
           >
             <SearchResultCard
-              v-for="(item, index) of searchResults"
               :key="index"
+              v-for="(item, index) of searchResults"
               :first-line="item.firstLine"
               :last-updated="item.lastUpdated"
               :title="item.title"

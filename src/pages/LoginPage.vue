@@ -78,11 +78,11 @@
       <template #footer>
         <div class="flex h-8 justify-between gap-4">
           <UButton
-            color="error"
+            @click="userStore.logout"
             :label="t('login.signOut')"
+            color="error"
             size="lg"
             variant="ghost"
-            @click="userStore.logout"
           />
           <UButton :label="t('login.toMain')" to="/" variant="link" />
         </div>
@@ -100,12 +100,12 @@
       </template>
       <UTabs
         v-model="activeTab"
+        :activation-mode="'automatic'"
+        :default-value="'0'"
+        :items="items"
+        :unmount-on-hide="false"
         class="w-full"
         color="neutral"
-        :items="items"
-        :default-value="'0'"
-        :unmount-on-hide="false"
-        :activation-mode="'automatic'"
       >
         <template #content="{ index }">
           <SignInForm v-if="index == 0" v-model:state="signInFormValue" />
@@ -116,16 +116,16 @@
       <template #footer>
         <div class="flex h-8 items-center justify-between gap-4">
           <UButton
-            color="neutral"
             :label="t('login.toMain')"
+            color="neutral"
             to="/"
             variant="link"
           />
           <UButton
+            @click.prevent="onSubmit"
             :disabled="actionDisabled"
             :label="actionText"
             variant="solid"
-            @click.prevent="onSubmit"
           />
         </div>
       </template>

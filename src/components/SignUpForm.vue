@@ -18,27 +18,27 @@
 
 <template>
   <UForm
-    class="flex w-full flex-col gap-2 pt-2"
     :schema="signUpFormSchema"
     :state="state"
+    class="flex w-full flex-col gap-2 pt-2"
   >
     <UFormField :label="t('signUp.username')" name="login" required size="sm">
       <UInput
         v-model="state.login"
+        :placeholder="t('signUp.usernamePlaceholder')"
         class="w-full"
         icon="i-lucide-circle-user"
-        :placeholder="t('signUp.usernamePlaceholder')"
         size="xl"
         variant="soft"
       >
-        <template v-if="state.login?.length" #trailing>
+        <template #trailing v-if="state.login?.length">
           <UButton
+            @click="state.login = ''"
             :aria-label="t('signUp.clearInput')"
             color="neutral"
             icon="i-lucide-x"
             size="sm"
             variant="ghost"
-            @click="state.login = ''"
           />
         </template>
       </UInput>
@@ -55,21 +55,21 @@
     >
       <UInput
         v-model="state.password"
+        :placeholder="t('signUp.passwordPlaceholder')"
+        :type="passwordVisible ? 'text' : 'password'"
         class="w-full"
         icon="i-lucide-lock"
-        :placeholder="t('signUp.passwordPlaceholder')"
         size="xl"
-        :type="passwordVisible ? 'text' : 'password'"
         variant="soft"
       >
         <template #trailing>
           <UButton
+            @click.stop="passwordVisible = !passwordVisible"
             :aria-label="t('signUp.showPassword')"
-            color="neutral"
             :icon="passwordVisible ? 'i-lucide-eye' : 'i-lucide-eye-closed'"
+            color="neutral"
             size="sm"
             variant="ghost"
-            @click.stop="passwordVisible = !passwordVisible"
           />
         </template>
       </UInput>
@@ -81,20 +81,20 @@
     <UFormField :label="t('signUp.email')" name="email" size="sm">
       <UInput
         v-model="state.email"
+        :placeholder="t('signUp.emailPlaceholder', { at: '@' })"
         class="w-full"
         icon="i-lucide-mail"
-        :placeholder="t('signUp.emailPlaceholder', { at: '@' })"
         size="xl"
         variant="soft"
       >
-        <template v-if="state.email?.length" #trailing>
+        <template #trailing v-if="state.email?.length">
           <UButton
+            @click="state.email = ''"
             :aria-label="t('signUp.clearInput')"
             color="neutral"
             icon="i-lucide-x"
             size="sm"
             variant="ghost"
-            @click="state.email = ''"
           />
         </template>
       </UInput>
