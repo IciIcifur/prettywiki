@@ -98,7 +98,15 @@
           }}
         </h4>
       </template>
-      <UTabs v-model="activeTab" class="w-full" color="neutral" :items="items">
+      <UTabs
+        v-model="activeTab"
+        class="w-full"
+        color="neutral"
+        :items="items"
+        :default-value="'0'"
+        :unmount-on-hide="false"
+        :activation-mode="'automatic'"
+      >
         <template #content="{ index }">
           <SignInForm v-if="index == 0" v-model:state="signInFormValue" />
           <SignUpForm v-else v-model:state="signUpFormValue" />

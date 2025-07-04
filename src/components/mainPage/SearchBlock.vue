@@ -33,7 +33,12 @@
 
 <template>
   <div class="flex w-full flex-col items-center justify-center gap-2">
-    <UPopover v-model:open="isResultOpen" content.align="start">
+    <UPopover
+      v-model:open="isResultOpen"
+      :content="{ align: 'start' }"
+      :openDelay="10"
+      :closeDelay="10"
+    >
       <template #anchor>
         <UInput
           v-model="searchValue"
