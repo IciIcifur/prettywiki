@@ -79,7 +79,7 @@
           <template v-if="articleType !== 'image' && article.summary">
             <p
               :key="index"
-              v-for="{ paragraph, index } in article.summary.split('\n')"
+              v-for="(paragraph, index) in article.summary.split('\n')"
               class="indent-6"
             >
               {{ paragraph }}
@@ -116,7 +116,7 @@
       <ul v-else class="flex flex-col gap-4 pt-4">
         <IconParagraph
           :key="index"
-          v-for="{ fact, index } in article"
+          v-for="(fact, index) in article"
           :paragraph="fact"
         />
       </ul>

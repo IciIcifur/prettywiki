@@ -4,7 +4,7 @@
   const props = defineProps<{
     src: string | undefined;
     alt: string;
-    fullWidth: false;
+    fullWidth?: boolean;
   }>();
 
   const error = ref(!props.src);
