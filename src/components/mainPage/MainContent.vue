@@ -44,7 +44,7 @@
 </script>
 
 <template>
-  <div class="grid w-full grid-cols-1 gap-4 lg:grid-cols-5">
+  <div class="grid w-full grid-flow-dense grid-cols-1 gap-4 lg:grid-cols-5">
     <ArticleMiniature
       v-if="isLoading || content?.featuredPicture"
       :article="content?.featuredPicture"
