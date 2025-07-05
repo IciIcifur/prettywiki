@@ -7,6 +7,32 @@
     "copyright": "© {author}, {year}",
     "sources": "Источники"
   },
+  "main": {
+    "greeting": {
+      "title": "Добро пожаловать в PrettyWiki,",
+      "description": "красивую энциклопедию, которую нельзя редактировать."
+    },
+    "search": {
+      "placeholder": "Начните искать что-нибудь...",
+      "nothingFound": "Ничего не найдено",
+      "bottomMenu": {
+        "featured": "Избранные статьи",
+        "contents": "Содержание",
+        "random": "Случайная статья",
+        "news": "Последние новости",
+        "donate": "Поддержать ресурс"
+      }
+    },
+    "timeline": {
+      "title": "В этот день в мире..."
+    },
+    "articleType": {
+      "featured": "Избранная статья",
+      "good": "Хорошая статья",
+      "image": "Избранное фото",
+      "facts": "А знаете ли вы?"
+    }
+  },
   "login": {
     "header": {
       "signIn": "Вход в PrettyWiki",

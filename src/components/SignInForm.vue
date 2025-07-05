@@ -1,12 +1,19 @@
 <script setup lang="ts">
   import type { SignInFormSchemaType } from '../types/zodSchemas.ts';
   import { signInFormSchema } from '../types/zodSchemas.ts';
-  import { ref } from 'vue';
+  import { reactive, ref, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
 
-  const { state } = defineProps<{ state: SignInFormSchemaType }>();
+  const { state: globalState } = defineProps<{ state: SignInFormSchemaType }>();
+  const state = reactive({ ...globalState });
+
   const passwordVisible = ref(false);
   const { t } = useI18n();
+
+  const emit = defineEmits(['update:state']);
+  watch(state, (newState) => emit('update:state', { ...newState }), {
+    deep: true,
+  });
 </script>
 
 <template>
@@ -17,52 +24,52 @@
   >
     <UFormField :label="t('signIn.username')" name="login" size="sm">
       <UInput
-        icon="i-lucide-circle-user"
         v-model="state.login"
-        variant="soft"
         :placeholder="t('signIn.usernamePlaceholder')"
         class="w-full"
-        size="lg"
+        icon="i-lucide-circle-user"
+        size="xl"
+        variant="soft"
       >
-        <template v-if="state.login?.length" #trailing>
+        <template #trailing v-if="state.login?.length">
           <UButton
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            icon="i-lucide-x"
-            aria-label="Clear input"
             @click="state.login = ''"
+            aria-label="Clear input"
+            color="neutral"
+            icon="i-lucide-x"
+            size="sm"
+            variant="ghost"
           />
         </template>
       </UInput>
       <template #error="{ error }">
-        {{ error && t(error) }}
+        {{ error && t(error as string) }}
       </template>
     </UFormField>
 
     <UFormField :label="t('signIn.password')" name="password" size="sm">
       <UInput
-        icon="i-lucide-lock"
         v-model="state.password"
-        variant="soft"
         :placeholder="t('signIn.passwordPlaceholder')"
         :type="passwordVisible ? 'text' : 'password'"
         class="w-full"
-        size="lg"
+        icon="i-lucide-lock"
+        size="xl"
+        variant="soft"
       >
         <template #trailing>
           <UButton
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            :icon="passwordVisible ? 'i-lucide-eye' : 'i-lucide-eye-closed'"
-            :aria-label="t('signIn.showPassword')"
             @click.stop="passwordVisible = !passwordVisible"
+            :aria-label="t('signIn.showPassword')"
+            :icon="passwordVisible ? 'i-lucide-eye' : 'i-lucide-eye-closed'"
+            color="neutral"
+            size="sm"
+            variant="ghost"
           />
         </template>
       </UInput>
       <template #error="{ error }">
-        {{ error && t(error) }}
+        {{ error && t(error as string) }}
       </template>
     </UFormField>
   </UForm>
