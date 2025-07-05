@@ -17,11 +17,11 @@
   >
     <img
       @error="error = true"
-      loading="lazy"
       v-if="!error"
       :alt="alt"
       :src="src"
       class="w-full max-w-3xl"
+      loading="lazy"
     />
     <div v-else class="flex h-full w-full items-center justify-center">
       <UIcon class="size-32" name="i-lucide-mountain-snow" />
