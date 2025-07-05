@@ -29,7 +29,7 @@ export interface ArticleSummary {
 
 export interface MaterialsOfTheDay {
   featuredArticle: ArticleSummary | null;
-  goodArticle?: ArticleSummary | null;
+  goodArticle: ArticleSummary | null;
   featuredPicture: Picture | null;
   facts: string[] | null;
 }

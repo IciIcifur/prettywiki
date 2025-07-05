@@ -6,7 +6,7 @@
   const regex = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
 
   const processedText = computed<string>(() => {
-    return text.replace(regex, (match, target, label) => {
+    return text.replace(regex, (_, target, label) => {
       const display = label || target;
       return `<a href="/wiki/${target.replace(/ /g, '_')}" class="font-medium hover:text-primary transition-colors">${display}</a>`;
     });

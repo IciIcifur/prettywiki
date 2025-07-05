@@ -17,6 +17,7 @@
   >
     <img
       @error="error = true"
+      loading="lazy"
       v-if="!error"
       :alt="alt"
       :src="src"

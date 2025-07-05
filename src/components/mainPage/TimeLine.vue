@@ -80,7 +80,7 @@
         >
           <template #title="{ item }">
             <ULink
-              :to="`/wiki/${item.title.replace(' ', '_')}`"
+              :to="`/wiki/${item.title?.replace(/ /g, '_')}`"
               class="hover:text-primary line-clamp-1 w-full text-[var(--ui-text)] transition-colors"
             >
               {{ item.title }}

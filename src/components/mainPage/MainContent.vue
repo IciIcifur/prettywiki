@@ -19,8 +19,6 @@
     else content.value = null;
 
     isLoading.value = false;
-
-    console.log(response);
   }
 
   onMounted(loadData);
@@ -54,7 +52,6 @@
       :is-loading="isLoading"
       article-type="image"
     />
-
     <ArticleMiniature
       v-if="isLoading || content?.featuredArticle"
       :article="content?.featuredArticle"
@@ -62,7 +59,6 @@
       :is-loading="isLoading"
       article-type="featured"
     />
-
     <ArticleMiniature
       v-if="isLoading || content?.goodArticle"
       :article="content?.goodArticle"
