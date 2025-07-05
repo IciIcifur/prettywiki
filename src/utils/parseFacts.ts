@@ -1,3 +1,5 @@
+const FACTS_COUNT = 7;
+
 export default function ParseFacts(
   rawText: string,
   locale: string
@@ -8,7 +10,7 @@ export default function ParseFacts(
       .filter((line) =>
         locale === 'en' ? line.startsWith('* ...') : line.startsWith('*')
       )
-      .slice(0, 10)
+      .slice(0, FACTS_COUNT)
       .map(
         (line) =>
           line

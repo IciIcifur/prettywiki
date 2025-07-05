@@ -10,24 +10,44 @@ const allowedKeys = new Set([
 ]);
 
 export default function ParseImageMetadata(
-  raw: { name: string; value: string }[]
+  raw: { name: string; value: string }[],
+  rawTitle: string | undefined
 ): Omit<Picture, 'src'> {
-  let rawMetadata: Record<string, string> = {};
+  const rawMetadata: Record<string, string> = {};
 
-  for (let field of raw) {
+  for (const field of raw) {
     if (allowedKeys.has(field.name)) rawMetadata[field.name] = field.value;
   }
 
-  const splitLabel = rawMetadata.Label.split(', ');
+  const splitLabel = rawMetadata.Label?.split(', ');
+  const trimmedTitle = rawTitle
+    ?.replace('File:', '')
+    .split('.')
+    .slice(0, -1)
+    .join('.');
+
+  const title = splitLabel
+    ? splitLabel[splitLabel.length - 1]
+    : trimmedTitle || '';
   const date = new Date(
-    rawMetadata.DateTimeOriginal.split(' ')[0].replace(/:/g, '-')
+    rawMetadata.DateTimeOriginal?.split(' ')[0].replace(/:/g, '-')
   ).toISOString();
+  const description = rawMetadata.Label || trimmedTitle || undefined;
+  const author = rawMetadata.Artist?.split('\n')[0];
+  const location =
+    [
+      rawMetadata.CountryDest,
+      rawMetadata.ProvinceOrStateDest,
+      rawMetadata.CityDest,
+    ]
+      .filter(Boolean)
+      .join(', ') || undefined;
 
   return {
-    title: splitLabel[splitLabel.length - 1],
+    title,
     date,
-    description: rawMetadata.Label || '',
-    author: rawMetadata.Artist,
-    location: `${rawMetadata.CountryDest}, ${rawMetadata.ProvinceOrStateDest}, ${rawMetadata.CityDest}`,
+    description: title === description ? undefined : description,
+    author,
+    location,
   };
 }

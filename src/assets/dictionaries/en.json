@@ -25,6 +25,12 @@
     },
     "timeline": {
       "title": "On that day..."
+    },
+    "articleType": {
+      "featured": "Featured article",
+      "good": "Good article",
+      "image": "Featured photo",
+      "facts": "Did you know..."
     }
   },
   "login": {

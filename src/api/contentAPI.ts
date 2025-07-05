@@ -1,6 +1,6 @@
 import axios from 'axios';
 import PickTimeLineIcon from '../utils/timelineIcon.ts';
-import type { TimelineItem } from '@nuxt/ui/components/Timeline.vue';
+
 import type {
   ArticleSummary,
   MaterialsOfTheDay,
@@ -10,6 +10,7 @@ import type {
 
 import ParseImageMetadata from '../utils/parseImageMetadata.ts';
 import ParseFacts from '../utils/parseFacts.ts';
+import type { TimelineItem } from '@nuxt/ui/components/Timeline.vue';
 
 const API_URI = 'https://_.wikipedia.org/w/api.php';
 const IMAGE_API_URI = 'https://commons.wikimedia.org/w/api.php';
@@ -127,7 +128,7 @@ export async function GetFactsOfTheDay(locale: string) {
     if (!result) return null;
 
     return ParseFacts(
-      Object.values(result.data.query.pages as Object)[0].revisions[0]?.['*'],
+      Object.values(result.data.query.pages as object)[0].revisions[0]?.['*'],
       locale
     );
   } catch {
@@ -223,13 +224,14 @@ export async function GetImageData(imageTitle: string) {
 
     if (!result) return null;
 
+    const { url, metadata } = Object.values(
+      result.data.query.pages as object
+    )[0].imageinfo[0];
+    const { title } = Object.values(result.data.query.pages as object)[0];
+
     return {
-      src: Object.values(result.data.query.pages as Object)[0].imageinfo[0]
-        .url as string,
-      ...ParseImageMetadata(
-        Object.values(result.data.query.pages as Object)[0].imageinfo[0]
-          .metadata
-      ),
+      src: url,
+      ...ParseImageMetadata(metadata, title),
     } as Picture;
   } catch {
     return null;

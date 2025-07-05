@@ -15,7 +15,7 @@ export interface SearchResult {
 export interface Picture {
   src: string;
   title: string;
-  description: string;
+  description?: string;
   date?: string;
   author?: string;
   location?: string;
