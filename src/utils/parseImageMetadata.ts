@@ -26,9 +26,9 @@ export default function ParseImageMetadata(
     .slice(0, -1)
     .join('.');
 
-  const title = splitLabel
-    ? splitLabel[splitLabel.length - 1]
-    : trimmedTitle || '';
+  const title = trimmedTitle
+    ? trimmedTitle
+    : splitLabel[splitLabel.length - 1] || '';
   const date = new Date(
     rawMetadata.DateTimeOriginal?.split(' ')[0].replace(/:/g, '-')
   ).toISOString();

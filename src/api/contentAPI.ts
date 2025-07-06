@@ -11,6 +11,7 @@ import type {
 import ParseImageMetadata from '../utils/parseImageMetadata.ts';
 import ParseFacts from '../utils/parseFacts.ts';
 import type { TimelineItem } from '@nuxt/ui/components/Timeline.vue';
+import { GetOnThisDay } from './restAPI.ts';
 
 const API_URI = 'https://_.wikipedia.org/w/api.php';
 const IMAGE_API_URI = 'https://commons.wikimedia.org/w/api.php';
@@ -29,38 +30,35 @@ const MAIN_PAGE_DATA_MAP = {
   },
 };
 
-export async function GetHistoryForThisDay(locale: string) {
-  const today = new Date();
-  const THIS_DAY_API_URI = `https://${locale}.wikipedia.org/api/rest_v1/feed/onthisday/events/${today.getMonth() + 1}/${today.getDate()}`;
+export async function GetHistoryForThisDay(
+  locale: string
+): Promise<TimelineItem | null> {
+  const result = await GetOnThisDay(locale);
+  if (result) {
+    const { events } = result;
 
-  try {
-    const result = await axios.get(THIS_DAY_API_URI);
-    const data: any[] = result.data.events;
+    return events.reverse().map((event) => {
+      const title = !!event.pages.length
+        ? event.pages[0].titles.normalized
+        : event.year.toString();
+      const description = event.text;
+      const date = event.year;
+      const icon = PickTimeLineIcon(
+        event.pages.map((page) => page.title),
+        event.text
+      );
 
-    return data.reverse().map((value) => {
-      const title: string = (
-        !!value.pages.length
-          ? value.pages[value.pages.length > 1 ? 1 : 0].title
-          : value.year
-      ).toString();
-      return {
-        title: title.replace(/_/g, ' '),
-        description: value.text
-          ? value.text[0].toUpperCase() + value.text.slice(1)
-          : '',
-        date: value.year,
-        icon: PickTimeLineIcon(
-          value.pages.map((page: any) => page.title),
-          value.text
-        ),
-      } as TimelineItem;
+      return { title, description, date, icon };
     });
-  } catch {
-    return null;
   }
+  return result;
 }
 
 export async function GetMaterialsOfTheDay(locale: string) {
+  // console.log(parsedHTML.querySelector('#main-tfa')?.querySelector('section'));
+  // console.log(parsedHTML.querySelector('#main-tga')?.querySelector('section'));
+  // console.log(await GetPageHTML(locale, 'Заглавная_страница'));
+
   try {
     const featuredArticleTitle = await GetArticleTitle(
       locale,

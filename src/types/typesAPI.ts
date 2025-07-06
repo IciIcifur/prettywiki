@@ -135,8 +135,12 @@ interface FeaturedOnThisDay {
 
 export interface Featured {
   tfa?: FeaturedTfa;
+  onthisday?: FeaturedOnThisDay[];
   mostread: FeaturedMostRead;
   image: FeaturedImage;
   news: FeaturedNews[];
-  onthisday?: FeaturedOnThisDay[];
+}
+
+export interface OnThisDay {
+  events: { pages: MainInfo[]; text: string; year: number }[];
 }
