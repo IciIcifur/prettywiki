@@ -4,7 +4,7 @@
   import { debouncedWatch } from '@vueuse/core';
   import { SearchForPage } from '../../api/contentAPI.ts';
   import BottomMenu from './BottomMenu.vue';
-  import type { SearchResult } from '../../types/types.ts';
+  import type { SearchItem } from '../../types/types.ts';
 
   const { t, locale } = useI18n();
 
@@ -12,7 +12,7 @@
   const isLoading = ref(false);
   const isResultOpen = ref(false);
 
-  const searchResults = ref<SearchResult[]>([]);
+  const searchResults = ref<SearchItem[]>([]);
 
   debouncedWatch(
     searchValue,

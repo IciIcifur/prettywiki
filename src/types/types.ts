@@ -6,7 +6,13 @@ export interface User {
   registrationDate?: string;
 }
 
-export interface SearchResult {
+export interface EventItem {
+  title: string;
+  description: string;
+  date: number;
+  icon: string;
+}
+export interface SearchItem {
   title: string;
   firstLine: string;
   lastUpdated: string;

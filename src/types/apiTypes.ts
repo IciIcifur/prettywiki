@@ -24,8 +24,8 @@ interface MainInfo {
     display: string;
   };
   pageid: number;
-  thumbnail: ImageInfo;
-  originalimage: ImageInfo;
+  thumbnail?: ImageInfo;
+  originalimage?: ImageInfo;
   lang: string;
   dir: string;
   revision: string;
@@ -88,15 +88,10 @@ export interface PageSummary {
   };
 }
 
-type FeaturedTfa = Omit<MainInfo, 'thumbnail' | 'originalimage'>;
-interface FeaturedMostRead {
-  date: string;
-  articles: ({
-    views: number;
-    rank: number;
-    view_history: { date: string; views: number }[];
-  } & MainInfo)[];
+export interface OnThisDay {
+  events: { pages: MainInfo[]; text: string; year: number }[];
 }
+
 type FeaturedImage = {
   image: ImageInfo;
   file_page: string;
@@ -120,12 +115,20 @@ type FeaturedImage = {
   };
   wb_entity_id: string;
   structured: {
-    captions: any;
+    captions: Record<string, string>;
   };
 } & Pick<MainInfo, 'title' | 'thumbnail'>;
 interface FeaturedNews {
   links: MainInfo[];
   story: string; // html
+}
+interface FeaturedMostRead {
+  date: string;
+  articles: ({
+    views: number;
+    rank: number;
+    view_history: { date: string; views: number }[];
+  } & MainInfo)[];
 }
 interface FeaturedOnThisDay {
   text: string;
@@ -134,13 +137,19 @@ interface FeaturedOnThisDay {
 }
 
 export interface Featured {
-  tfa?: FeaturedTfa;
+  tfa?: MainInfo;
   onthisday?: FeaturedOnThisDay[];
   mostread: FeaturedMostRead;
   image: FeaturedImage;
   news: FeaturedNews[];
 }
 
-export interface OnThisDay {
-  events: { pages: MainInfo[]; text: string; year: number }[];
+export interface SearchResultItem {
+  ns: number;
+  pageid: number;
+  size: number;
+  snippet: string; // html
+  timestamp: string;
+  title: string;
+  wordcount: number;
 }
