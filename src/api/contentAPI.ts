@@ -82,7 +82,8 @@ export async function GetMaterialsOfTheDay(locale: string) {
       featuredPicture: await GetImageOfTheDay(),
     };
     return materials;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return null;
   }
 }

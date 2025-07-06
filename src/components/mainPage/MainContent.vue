@@ -4,7 +4,7 @@
   import { useI18n } from 'vue-i18n';
   import type { MaterialsOfTheDay } from '../../types/types.ts';
 
-  const WIDE_SYMBOL_COUNT = 1200;
+  const WIDE_SYMBOL_COUNT = 1600;
 
   const i18n = useI18n();
   const content = ref<MaterialsOfTheDay | null>(null);

@@ -20,7 +20,7 @@
       v-if="!error"
       :alt="alt"
       :src="src"
-      class="w-full max-w-3xl"
+      class="h-full max-h-[560px] w-full max-w-3xl"
       loading="lazy"
     />
     <div v-else class="flex h-full w-full items-center justify-center">
