@@ -171,7 +171,7 @@ export type ProcessedQueryResult = Partial<{
   externallinks: { ns: number; title: string }[];
 }>;
 
-export interface ImageMetadata {
+export interface ExtMetadataFields {
   ObjectName: string;
   Label: string;
   ImageDescription: string;
@@ -182,6 +182,26 @@ export interface ImageMetadata {
   ProvinceOrStateDest: string;
   CityDest: string;
 }
+export interface MetadataFields {
+  // Name/Title
+  ObjectName: string;
+  ImageDescription: string;
+  // Description/Keywords
+  Keywords: string;
+  // Author
+  Artist: string;
+  Make: string;
+  // Date
+  DateTimeOriginal: string; // Дата и время съёмки
+  DateTimeDigitized: string; // Дата и время оцифровки (если отличается)
+  // Dimensions
+  ImageWidth: number;
+  ImageLength: number;
+  Orientation: number;
+  //Other
+  Rating: string; // Рейтинг изображения (если выставлен)
+}
+
 interface RawContent {
   revisions?: string;
   images?: string[];

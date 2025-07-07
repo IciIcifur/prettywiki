@@ -43,9 +43,9 @@ export function getRequiredTitles(locale: string) {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  let monthLong = date.toLocaleDateString(locale, { month: 'long' });
-  let month2 = twoDigits(month);
-  let day2 = twoDigits(day);
+  const monthLong = date.toLocaleDateString(locale, { month: 'long' });
+  const month2 = twoDigits(month);
+  const day2 = twoDigits(day);
 
   const key = locale as keyof typeof pagesMap;
   let titles = [pagesMap[key].tfa, pagesMap[key].dyk];
@@ -110,6 +110,6 @@ export function processQueryResult(
   });
 }
 
-export function processImageMetadataQueryResult(data) {
+export function processImageMetadataQueryResult(data: any) {
   console.log(data);
 }

@@ -94,13 +94,13 @@ export async function ImageMetadataQueryRequest(locale: string, title: string) {
         action: 'query',
         titles: title,
         prop: 'imageinfo',
-        iiprop: 'url|user|extmetadata',
+        iiprop: 'url|metadata|extmetadata',
         format: 'json',
         origin: '*',
       },
     });
 
-    return processImageMetadataQueryResult(data.query.pages);
+    return processImageMetadataQueryResult(data.query);
   } catch (e) {
     console.error(e);
     return null;
@@ -117,7 +117,7 @@ export async function GetMainPageContents(
   if (!materials) return null;
 
   // TODO: work on image metadata
-  //  await ImageMetadataQueryRequest(locale, materials[2].images[0] || '');
+  // await ImageMetadataQueryRequest(locale, materials[2].images[0] || '');
   // ru: tfi.file(парсить название файла)
   // en: tfi.description[0]
 
