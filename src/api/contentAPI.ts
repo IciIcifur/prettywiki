@@ -11,7 +11,6 @@ import {
   GetFeatured,
   GetMainPage,
   GetOnThisDay,
-  GetPageHTML,
   SearchRequest,
 } from './api.ts';
 
@@ -53,6 +52,14 @@ export async function GetHistoryForThisDay(
   return result;
 }
 
+export async function GetFeaturedArticle() {}
+
+export async function GetGoodArticle() {}
+
+export async function GetFeaturedImage() {}
+
+export async function GetDidYouKnow() {}
+
 export async function GetMaterialsOfTheDay(
   locale: string
 ): Promise<MaterialsOfTheDay | null> {
@@ -86,25 +93,6 @@ export async function GetMaterialsOfTheDay(
     const facts = null;
 
     await GetMainPage(locale);
-
-    // TODO: parse
-    const articles = {
-      en: [['#mp-dyk']],
-      ru: [
-        ['#main-tfa', 'section'],
-        ['#main-tga', 'section'],
-        ['#main-dyk', 'section', '.main-box-content'],
-      ],
-    };
-    for (let article of articles[locale as keyof typeof articles]) {
-      console.log(
-        await GetPageHTML(
-          locale,
-          locale === 'ru' ? 'Заглавная_страница' : 'Main_Page',
-          article
-        )
-      );
-    }
 
     return { featuredPicture, featuredArticle, goodArticle, facts };
   }
