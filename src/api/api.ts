@@ -1,61 +1,48 @@
 import axios from 'axios';
 import type {
   Featured,
+  MainPageRawContents,
   OnThisDay,
   PageSummary,
+  ProcessedQueryResult,
+  QueryResult,
+  QueryResultPageFieldsKey,
   SearchResultItem,
 } from '../types/apiTypes.ts';
+import {
+  getRequiredTitles,
+  MAIN_API,
+  processImageMetadataQueryResult,
+  processQueryResult,
+  REST_API,
+  twoDigits,
+} from './utils.ts';
 
-const MAIN_API = 'https://_.wikipedia.org/w/api.php';
-const REST_API = 'https://_.wikipedia.org/api/rest_v1';
-const IMAGE_URL_BASE = 'https://commons.wikimedia.org/wiki';
-
-function twoDigits(n: number) {
-  if (n.toString().length < 2) return `0${n}`;
-  return n.toString();
-}
-
+/** Query request to Wikipedia PHP API
+ * @returns array of data for specified titles **/
 export async function QueryRequest(
   locale: string,
   titles: string[],
-  prop: ('links' | 'externallinks' | 'images')[] = []
-) {
+  prop: Exclude<QueryResultPageFieldsKey, 'revisions'>[] = []
+): Promise<ProcessedQueryResult[] | null> {
   try {
-    const keys: string[] = ['revisions', ...prop];
-    const {
-      data: { query },
-    } = await axios.get(`${MAIN_API.replace('_', locale)}`, {
-      params: {
-        action: 'query',
-        titles: titles.join('|'),
-        prop: keys.join('|'),
-        rvprop: 'content',
-        format: 'json',
-        origin: '*',
-      },
-    });
-    const pages: Record<string, any>[] = Object.values(query.pages);
-    // todo: make result processing and typing
-    return pages.map((page: Record<string, any>) => {
-      const result: Record<string, any> = {};
-      for (const key of keys) {
-        if (key === 'revisions') result[key] = page[key][0];
-        else if (key === 'images') {
-          result[key] = page[key]
-            ?.filter(
-              (image: { ns: number; title: string }) =>
-                !/File:\d+ green\.svg/.test(image.title)
-            )
-            .map((image: { ns: number; title: string }) => {
-              return {
-                ns: image.ns,
-                title: `${IMAGE_URL_BASE}/${image.title}`,
-              };
-            });
-        } else result[key] = page[key];
+    const keys: QueryResultPageFieldsKey[] = ['revisions', ...prop];
+
+    const { data }: { data: QueryResult } = await axios.get(
+      `${MAIN_API.replace('_', locale)}`,
+      {
+        params: {
+          action: 'query',
+          titles: titles.join('|'),
+          prop: keys.join('|'),
+          rvprop: 'content',
+          format: 'json',
+          origin: '*',
+        },
       }
-      return result;
-    });
+    );
+
+    return processQueryResult(data, keys);
   } catch (e) {
     console.error(e);
     return null;
@@ -100,6 +87,57 @@ export async function SearchRequest(
   }
 }
 
+export async function ImageMetadataQueryRequest(locale: string, title: string) {
+  try {
+    const { data } = await axios.get(`${MAIN_API.replace('_', locale)}`, {
+      params: {
+        action: 'query',
+        titles: title,
+        prop: 'imageinfo',
+        iiprop: 'url|user|extmetadata',
+        format: 'json',
+        origin: '*',
+      },
+    });
+
+    return processImageMetadataQueryResult(data.query.pages);
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
+// PHP API
+export async function GetMainPageContents(
+  locale: string
+): Promise<MainPageRawContents | null> {
+  const requiredTitles = getRequiredTitles(locale);
+  const materials = await QueryRequest(locale, requiredTitles, ['images']);
+
+  if (!materials) return null;
+
+  // TODO: work on image metadata
+  //  await ImageMetadataQueryRequest(locale, materials[2].images[0] || '');
+  // ru: tfi.file(парсить название файла)
+  // en: tfi.description[0]
+
+  if (locale === 'ru') {
+    return {
+      tfa: materials[0],
+      dyk: materials[1],
+      tga: materials[2],
+      tfi: { file: materials[3], description: materials[4] },
+    };
+  }
+
+  return {
+    tfa: materials[0],
+    dyk: materials[1],
+    tfi: { file: undefined, description: materials[2] },
+  };
+}
+
+// REST API
 /** @returns raw list of events **/
 export async function GetOnThisDay(
   locale: string,
@@ -128,43 +166,4 @@ export async function GetPageSummary(
   page: string
 ): Promise<PageSummary | null> {
   return await GetRequest(locale, `page/summary/${page}`);
-}
-
-export async function GetMainPage(locale: string) {
-  // Шаблон:Текущая избранная статья
-  // Шаблон:Текущая хорошая статья
-  // Шаблон:Знаете ли вы
-  // Шаблон:Potd/${year}-${moth2}-${day1} (ru)
-  // https://commons.wikimedia.org/wiki/File:${результат запроса по шаблону Шаблон:Potd/2025-07-7}
-
-  // Wikipedia:Today's featured_article/${month} ${day}, ${year}
-  // Template:POTD_protected/${year}-${month}-${day}
-  // Template:DYK
-
-  console.log(locale);
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  const localeMonth = date.toLocaleDateString('en', { month: 'long' });
-
-  const ruTitles = [
-    'Шаблон:Текущая избранная статья',
-    'Шаблон:Текущая хорошая статья',
-    'Шаблон:Знаете ли вы',
-    `Шаблон:Potd/${year}-${twoDigits(month)}-${day} (ru)`,
-    `Шаблон:Potd/${year}-${twoDigits(month)}-${day}`,
-  ];
-  const enTitles = [
-    `Wikipedia:Today's featured_article/${localeMonth} ${day}, ${year}`,
-    `Template:POTD protected/${year}-${twoDigits(month)}-${twoDigits(day)}`,
-    'Template:Did you know',
-  ];
-
-  const ru = await QueryRequest('ru', ruTitles, ['images']);
-  const en = await QueryRequest('en', enTitles, ['images']);
-
-  console.log(ru);
-  console.log(en);
 }

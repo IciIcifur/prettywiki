@@ -1,3 +1,5 @@
+type KeysOfUnion<T> = T extends any ? keyof T : never;
+
 interface ImageInfo {
   source: string;
   width: number;
@@ -42,23 +44,6 @@ interface MainInfo {
   normalizedtitle: string;
 }
 
-export interface PageMetadata {
-  count: number;
-  items: {
-    title: string;
-    page_id: number;
-    rev: number;
-    tid: string;
-    comment: string;
-    restrictions: string[];
-    tags: string[];
-    user_id: number;
-    user_text: string;
-    timestamp: string;
-    redirect: boolean;
-    page_language: string;
-  };
-}
 export interface PageSummary {
   titles: {
     canonical: string;
@@ -87,7 +72,6 @@ export interface PageSummary {
     lon: number;
   };
 }
-
 export interface OnThisDay {
   events: { pages: MainInfo[]; text: string; year: number }[];
 }
@@ -152,4 +136,64 @@ export interface SearchResultItem {
   timestamp: string;
   title: string;
   wordcount: number;
+}
+
+export type QueryResultPageFields =
+  | { missing: '' }
+  | {
+      revisions: {
+        contentformat: string;
+        contentmodel: string;
+        '*': string;
+      }[];
+      images: { ns: number; title: string }[];
+      links: { ns: number; title: string }[];
+      externallinks: { ns: number; title: string }[];
+    };
+export type QueryResultPageFieldsKey = KeysOfUnion<QueryResultPageFields>;
+
+export type QueryResultPage = {
+  pageid: number;
+  ns: number;
+  title: string;
+} & Partial<QueryResultPageFields>;
+export interface QueryResult {
+  query: {
+    pages: Map<number, QueryResultPage>;
+  };
+}
+
+export type ProcessedQueryResult = Partial<{
+  missing: '';
+  revisions: string;
+  images: string[];
+  links: { ns: number; title: string }[];
+  externallinks: { ns: number; title: string }[];
+}>;
+
+export interface ImageMetadata {
+  ObjectName: string;
+  Label: string;
+  ImageDescription: string;
+  Artist: string;
+  DateTime: string;
+  DateTimeOriginal: string;
+  CountryDest: string;
+  ProvinceOrStateDest: string;
+  CityDest: string;
+}
+interface RawContent {
+  revisions?: string;
+  images?: string[];
+}
+export interface MainPageRawContents {
+  tfa: RawContent;
+  dyk: RawContent;
+  tga?: RawContent;
+  tfi: {
+    file: RawContent | undefined;
+    /* url: string;
+     * metadata: Partial<ImageMetadata>; */
+    description: RawContent;
+  };
 }

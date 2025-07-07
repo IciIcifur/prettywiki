@@ -9,7 +9,7 @@ import type {
 } from '../types/types.ts';
 import {
   GetFeatured,
-  GetMainPage,
+  GetMainPageContents,
   GetOnThisDay,
   SearchRequest,
 } from './api.ts';
@@ -52,14 +52,6 @@ export async function GetHistoryForThisDay(
   return result;
 }
 
-export async function GetFeaturedArticle() {}
-
-export async function GetGoodArticle() {}
-
-export async function GetFeaturedImage() {}
-
-export async function GetDidYouKnow() {}
-
 export async function GetMaterialsOfTheDay(
   locale: string
 ): Promise<MaterialsOfTheDay | null> {
@@ -92,7 +84,7 @@ export async function GetMaterialsOfTheDay(
     const goodArticle = null;
     const facts = null;
 
-    await GetMainPage(locale);
+    console.log(await GetMainPageContents(locale));
 
     return { featuredPicture, featuredArticle, goodArticle, facts };
   }
