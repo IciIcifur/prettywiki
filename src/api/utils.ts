@@ -1,4 +1,6 @@
 import type {
+  ImageInfoResultItem,
+  ImageMetadata,
   ProcessedQueryResult,
   QueryResult,
   QueryResultPageFieldsKey,
@@ -21,9 +23,9 @@ export const pagesMap = {
     },
   },
   en: {
-    tfa: "Wikipedia:Today's featured_article/{monthLong} {day}, {year}",
-    dyk: 'Template:DYK',
-    tfi: 'Template:POTD_protected/{year}-{month2}-{day2}',
+    tfa: "Wikipedia:Today's featured article/{monthLong} {day}, {year}",
+    dyk: 'Template:Did you know',
+    tfi: 'Template:POTD protected/{year}-{month2}-{day2}',
   },
 };
 
@@ -77,7 +79,8 @@ export function processQueryResult(
 ) {
   const pages = Object.values(data.query.pages);
 
-  return pages.map((page) => {
+  const fullResult: Map<string, ProcessedQueryResult> = new Map();
+  pages.forEach((page) => {
     const result: ProcessedQueryResult = {};
 
     for (const key of keys) {
@@ -106,10 +109,18 @@ export function processQueryResult(
       }
     }
 
-    return result;
+    fullResult.set(page.title, result);
   });
+  return fullResult;
 }
 
-export function processImageMetadataQueryResult(data: any) {
-  console.log(data);
+export function processImageMetadataQueryResult(data: ImageInfoResultItem): {
+  url: string;
+  metadata: ImageMetadata;
+} {
+  console.log(data.url);
+  console.log(data.extmetadata);
+  console.log(data.metadata);
+
+  return { url: data.url, metadata: { title: '' } };
 }

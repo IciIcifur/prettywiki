@@ -24,7 +24,7 @@ export async function QueryRequest(
   locale: string,
   titles: string[],
   prop: Exclude<QueryResultPageFieldsKey, 'revisions'>[] = []
-): Promise<ProcessedQueryResult[] | null> {
+): Promise<Map<string, ProcessedQueryResult> | null> {
   try {
     const keys: QueryResultPageFieldsKey[] = ['revisions', ...prop];
 
@@ -80,7 +80,7 @@ export async function SearchRequest(
       },
     });
 
-    return data.query.search;
+    return data.query['search'];
   } catch (e) {
     console.error(e);
     return null;
@@ -89,18 +89,23 @@ export async function SearchRequest(
 
 export async function ImageMetadataQueryRequest(locale: string, title: string) {
   try {
-    const { data } = await axios.get(`${MAIN_API.replace('_', locale)}`, {
-      params: {
-        action: 'query',
-        titles: title,
-        prop: 'imageinfo',
-        iiprop: 'url|metadata|extmetadata',
-        format: 'json',
-        origin: '*',
-      },
-    });
+    const { data }: { data: QueryResult } = await axios.get(
+      `${MAIN_API.replace('_', locale)}`,
+      {
+        params: {
+          action: 'query',
+          titles: title,
+          prop: 'imageinfo',
+          iiprop: 'url|metadata|extmetadata',
+          format: 'json',
+          origin: '*',
+        },
+      }
+    );
 
-    return processImageMetadataQueryResult(data.query);
+    const imageInfo = Object.values(data.query.pages)[0]['imageinfo'][0];
+
+    return processImageMetadataQueryResult(imageInfo);
   } catch (e) {
     console.error(e);
     return null;
@@ -117,23 +122,52 @@ export async function GetMainPageContents(
   if (!materials) return null;
 
   // TODO: work on image metadata
+  // ru: parse file name from materials.get(requiredTitles[3]).revisions
+  // ru: parse description from materials.get(requiredTitles[4]).revisions
+  // en: parse file name and description from materials.get(requiredTitles[2]).revisions
+  /*  if (locale === 'ru')
+    console.log(
+      'ru',
+      materials.get(requiredTitles[3])?.revisions,
+      materials.get(requiredTitles[4])?.revisions
+    );
+  else console.log('en', materials.get(requiredTitles[2])?.revisions);*/
+
   // await ImageMetadataQueryRequest(locale, materials[2].images[0] || '');
+  // tfi типа raw content
   // ru: tfi.file(парсить название файла)
   // en: tfi.description[0]
+  // tfi -> url, metadata, description
 
+  const imageResult = await ImageMetadataQueryRequest(
+    locale,
+    "File:Tamarind fruits (Tamarindus indica 'Si Thong').jpg"
+  );
+
+  console.log(imageResult);
+
+  const fallback = { images: undefined, revisions: undefined };
   if (locale === 'ru') {
     return {
-      tfa: materials[0],
-      dyk: materials[1],
-      tga: materials[2],
-      tfi: { file: materials[3], description: materials[4] },
+      tfa: materials.get(requiredTitles[0]) || fallback,
+      dyk: materials.get(requiredTitles[1]) || fallback,
+      tga: materials.get(requiredTitles[2]),
+      tfi: {
+        url: imageResult?.url ?? '', // materials.get(requiredTitles[3]),
+        metadata: imageResult?.metadata ?? { title: '' },
+        description: '', // materials.get(requiredTitles[4]),
+      },
     };
   }
 
   return {
-    tfa: materials[0],
-    dyk: materials[1],
-    tfi: { file: undefined, description: materials[2] },
+    tfa: materials.get(requiredTitles[0]) || fallback,
+    dyk: materials.get(requiredTitles[1]) || fallback,
+    tfi: {
+      url: imageResult?.url ?? '',
+      metadata: imageResult?.metadata ?? { title: '' },
+      description: '', //materials.get(requiredTitles[2])
+    },
   };
 }
 

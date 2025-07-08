@@ -1,5 +1,6 @@
 type KeysOfUnion<T> = T extends any ? keyof T : never;
 
+// REST
 interface ImageInfo {
   source: string;
   width: number;
@@ -128,6 +129,7 @@ export interface Featured {
   news: FeaturedNews[];
 }
 
+// PHP
 export interface SearchResultItem {
   ns: number;
   pageid: number;
@@ -137,7 +139,13 @@ export interface SearchResultItem {
   title: string;
   wordcount: number;
 }
-
+export interface ImageInfoResultItem {
+  descriptionshorturl: string;
+  descriptionurl: string;
+  extmetadata: Partial<ExtMetadataFields>;
+  metadata: { name: keyof MetadataFields; value: string | number }[];
+  url: string;
+}
 export type QueryResultPageFields =
   | { missing: '' }
   | {
@@ -171,16 +179,20 @@ export type ProcessedQueryResult = Partial<{
   externallinks: { ns: number; title: string }[];
 }>;
 
+interface ExtMetadataField {
+  source: string;
+  value: string;
+}
 export interface ExtMetadataFields {
-  ObjectName: string;
-  Label: string;
-  ImageDescription: string;
-  Artist: string;
-  DateTime: string;
-  DateTimeOriginal: string;
-  CountryDest: string;
-  ProvinceOrStateDest: string;
-  CityDest: string;
+  ObjectName: ExtMetadataField;
+  Label: ExtMetadataField;
+  ImageDescription: ExtMetadataField;
+  Artist: ExtMetadataField;
+  DateTime: ExtMetadataField;
+  DateTimeOriginal: ExtMetadataField;
+  CountryDest: ExtMetadataField;
+  ProvinceOrStateDest: ExtMetadataField;
+  CityDest: ExtMetadataField;
 }
 export interface MetadataFields {
   // Name/Title
@@ -201,6 +213,13 @@ export interface MetadataFields {
   //Other
   Rating: string; // Рейтинг изображения (если выставлен)
 }
+export interface ImageMetadata {
+  title: string;
+  description?: string;
+  date?: string;
+  author?: string;
+  location?: string;
+}
 
 interface RawContent {
   revisions?: string;
@@ -211,9 +230,8 @@ export interface MainPageRawContents {
   dyk: RawContent;
   tga?: RawContent;
   tfi: {
-    file: RawContent | undefined;
-    /* url: string;
-     * metadata: Partial<ImageMetadata>; */
-    description: RawContent;
+    url: string;
+    metadata: ImageMetadata;
+    description: string;
   };
 }
