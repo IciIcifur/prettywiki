@@ -87,6 +87,7 @@ export async function SearchRequest(
   }
 }
 
+/** Returns image data by filename ("File:*.jpg") */
 export async function ImageMetadataQueryRequest(locale: string, title: string) {
   try {
     const { data }: { data: QueryResult } = await axios.get(
@@ -115,60 +116,23 @@ export async function ImageMetadataQueryRequest(locale: string, title: string) {
 // PHP API
 export async function GetMainPageContents(
   locale: string
-): Promise<MainPageRawContents | null> {
+): Promise<MainPageRawContents> {
   const requiredTitles = getRequiredTitles(locale);
   const materials = await QueryRequest(locale, requiredTitles, ['images']);
 
-  if (!materials) return null;
+  if (!materials) return { tfa: undefined, tga: undefined, tfi: undefined };
 
-  // TODO: work on image metadata
-  // ru: parse file name from materials.get(requiredTitles[3]).revisions
-  // ru: parse description from materials.get(requiredTitles[4]).revisions
-  // en: parse file name and description from materials.get(requiredTitles[2]).revisions
-  /*  if (locale === 'ru')
-    console.log(
-      'ru',
-      materials.get(requiredTitles[3])?.revisions,
-      materials.get(requiredTitles[4])?.revisions
-    );
-  else console.log('en', materials.get(requiredTitles[2])?.revisions);*/
-
-  // await ImageMetadataQueryRequest(locale, materials[2].images[0] || '');
-  // tfi типа raw content
-  // ru: tfi.file(парсить название файла)
-  // en: tfi.description[0]
-  // tfi -> url, metadata, description
-
-  console.log(requiredTitles, materials);
-  const imageResult = await ImageMetadataQueryRequest(
-    locale,
-    "File:Tamarind fruits (Tamarindus indica 'Si Thong').jpg"
-  );
-
-  // console.log(imageResult);
-
-  const fallback = { images: undefined, revisions: undefined };
-  if (locale === 'ru') {
+  if (locale === 'ru')
     return {
-      tfa: materials.get(requiredTitles[0]) || fallback,
-      dyk: materials.get(requiredTitles[1]) || fallback,
-      tga: materials.get(requiredTitles[2]),
-      tfi: {
-        url: imageResult?.url ?? '', // materials.get(requiredTitles[3]),
-        metadata: imageResult?.metadata ?? { title: '' },
-        description: '', // materials.get(requiredTitles[4]),
-      },
+      tfa: materials.get(requiredTitles[0]) || undefined,
+      tga: materials.get(requiredTitles[1]) || undefined,
+      tfi: materials.get(requiredTitles[2]) || undefined,
     };
-  }
 
   return {
-    tfa: materials.get(requiredTitles[0]) || fallback,
-    dyk: materials.get(requiredTitles[1]) || fallback,
-    tfi: {
-      url: imageResult?.url ?? '',
-      metadata: imageResult?.metadata ?? { title: '' },
-      description: '', //materials.get(requiredTitles[2])
-    },
+    tfa: materials.get(requiredTitles[0]) || undefined,
+    tga: undefined,
+    tfi: materials.get(requiredTitles[1]) || undefined,
   };
 }
 

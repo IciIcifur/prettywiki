@@ -13,6 +13,7 @@ import {
   GetOnThisDay,
   SearchRequest,
 } from './api.ts';
+import parseTemplate from '../utils/parseTemplate.ts';
 
 export async function GetHistoryForThisDay(
   locale: string
@@ -63,6 +64,7 @@ export async function GetMaterialsOfTheDay(
   }
 
   const { tfa, image, dyk } = result;
+  const facts = dyk.map((fact) => fact.html);
 
   const featuredPicture: Picture = {
     src: image.image.source,
@@ -72,8 +74,7 @@ export async function GetMaterialsOfTheDay(
     location:
       image.structured.captions[locale] || image.structured.captions['en'],
   };
-
-  const featuredArticle: ArticleSummary | null = tfa
+  let featuredArticle: ArticleSummary | null = tfa
     ? {
         title: tfa.titles.normalized,
         description: tfa.description,
@@ -81,11 +82,22 @@ export async function GetMaterialsOfTheDay(
         summary: tfa.extract,
       }
     : null;
+  let goodArticle = null;
 
-  const goodArticle = null;
-  const facts = dyk.map((fact) => fact.html);
+  const {
+    tfa: rawTfa,
+    tga: rawTga,
+    tfi: rawTfi,
+  } = await GetMainPageContents(locale);
+  console.log({ image, tfa });
+  console.log({ rawTfi, rawTfa, rawTga });
 
-  console.log(await GetMainPageContents(locale));
+  if (!featuredArticle && rawTfa) featuredArticle = parseTemplate(rawTfa);
+  if (rawTga) goodArticle = parseTemplate(rawTga);
+
+  if (locale === 'en' && rawTfi) {
+    parseTemplate(rawTfi);
+  }
 
   return { featuredPicture, featuredArticle, goodArticle, facts };
 }

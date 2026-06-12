@@ -225,17 +225,12 @@ export interface ImageMetadata {
   location?: string;
 }
 
-interface RawContent {
+export interface RawContent {
   revisions?: string;
   images?: string[];
 }
 export interface MainPageRawContents {
-  tfa: RawContent;
-  dyk: RawContent;
-  tga?: RawContent;
-  tfi: {
-    url: string;
-    metadata: ImageMetadata;
-    description: string;
-  };
+  tfa: RawContent | undefined;
+  tga: RawContent | undefined;
+  tfi: RawContent | undefined;
 }
