@@ -48,6 +48,28 @@ export async function QueryRequest(
     return null;
   }
 }
+/** Expand template request to Wikipedia PHP API
+ * @returns array of data for specified titles **/
+export async function ExpandTemplateRequest(
+  locale: string,
+  title: string
+): Promise<string | null> {
+  try {
+    const { data } = await axios.get(`${MAIN_API.replace('_', locale)}`, {
+      params: {
+        action: 'expandtemplates',
+        text: `{{${title}}}`,
+        prop: 'wikitext',
+        format: 'json',
+        origin: '*',
+      },
+    });
+    return data?.expandtemplates?.wikitext;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
 /** Request to Wikipedia REST API **/
 export async function GetRequest(locale: string, url: string, params?: any) {
   try {

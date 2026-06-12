@@ -66,7 +66,7 @@ export async function GetMaterialsOfTheDay(
   const { tfa, image, dyk } = result;
   const facts = dyk.map((fact) => fact.html);
 
-  const featuredPicture: Picture = {
+  let featuredPicture: Picture = {
     src: image.image.source,
     title: trimTitle(image.title),
     description: image.description.text,
@@ -89,14 +89,13 @@ export async function GetMaterialsOfTheDay(
     tga: rawTga,
     tfi: rawTfi,
   } = await GetMainPageContents(locale);
-  console.log({ image, tfa });
-  console.log({ rawTfi, rawTfa, rawTga });
 
-  if (!featuredArticle && rawTfa) featuredArticle = parseTemplate(rawTfa);
-  if (rawTga) goodArticle = parseTemplate(rawTga);
+  if (!featuredArticle && rawTfa)
+    featuredArticle = await parseTemplate(rawTfa, locale, 'tfa');
+  if (rawTga) goodArticle = await parseTemplate(rawTga, locale, 'tga');
 
   if (locale === 'en' && rawTfi) {
-    parseTemplate(rawTfi);
+    featuredPicture = await parseTemplate(rawTfi, locale, 'tfi');
   }
 
   return { featuredPicture, featuredArticle, goodArticle, facts };

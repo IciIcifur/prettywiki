@@ -38,6 +38,11 @@ export function twoDigits(n: number) {
   return n.toString();
 }
 
+/** @returns main page title for locale **/
+export function getMainPageTitle(locale: string) {
+  return locale === 'ru' ? 'Заглавная страница' : 'Main Page';
+}
+
 /** @returns main page titles to require for locale **/
 export function getRequiredTitles(locale: string) {
   const date = new Date();
