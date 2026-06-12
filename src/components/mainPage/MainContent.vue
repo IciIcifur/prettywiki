@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, onBeforeMount, ref, watch } from 'vue';
+  import { computed, onMounted, ref, watch } from 'vue';
   import { GetMaterialsOfTheDay } from '../../api/contentAPI.ts';
   import { useI18n } from 'vue-i18n';
   import type { MaterialsOfTheDay } from '../../types/types.ts';
@@ -21,7 +21,7 @@
     isLoading.value = false;
   }
 
-  onBeforeMount(loadData);
+  onMounted(loadData);
 
   watch(locale, loadData, { flush: 'post' });
 

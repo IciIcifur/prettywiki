@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
   import type { TimelineItem } from '@nuxt/ui/components/Timeline.vue';
   import { GetHistoryForThisDay } from '../../api/contentAPI.ts';
   import { useI18n } from 'vue-i18n';
@@ -34,7 +34,7 @@
     loading.value = false;
   }
 
-  onBeforeMount(async () => {
+  onMounted(async () => {
     await loadItems();
     scrollToRight();
 
@@ -53,7 +53,7 @@
 <template>
   <div class="flex w-full flex-col gap-4">
     <h1
-      v-if="items.length"
+      v-if="items.length || loading"
       class="w-full text-neutral-300 italic dark:text-neutral-700"
     >
       {{ localizedDate }}
