@@ -139,12 +139,13 @@ export async function GetMainPageContents(
   // en: tfi.description[0]
   // tfi -> url, metadata, description
 
+  console.log(requiredTitles, materials);
   const imageResult = await ImageMetadataQueryRequest(
     locale,
     "File:Tamarind fruits (Tamarindus indica 'Si Thong').jpg"
   );
 
-  console.log(imageResult);
+  // console.log(imageResult);
 
   const fallback = { images: undefined, revisions: undefined };
   if (locale === 'ru') {

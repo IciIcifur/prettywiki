@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import { computed, onMounted, ref, watch } from 'vue';
+  import { computed, onBeforeMount, ref, watch } from 'vue';
   import { GetMaterialsOfTheDay } from '../../api/contentAPI.ts';
   import { useI18n } from 'vue-i18n';
   import type { MaterialsOfTheDay } from '../../types/types.ts';
 
   const WIDE_SYMBOL_COUNT = 1600;
 
-  const i18n = useI18n();
+  const { locale } = useI18n();
   const content = ref<MaterialsOfTheDay | null>(null);
 
   const isLoading = ref<boolean>(false);
@@ -14,18 +14,16 @@
   async function loadData() {
     isLoading.value = true;
 
-    const response = await GetMaterialsOfTheDay(i18n.locale.value);
+    const response = await GetMaterialsOfTheDay(locale.value);
     if (response) content.value = response;
     else content.value = null;
 
     isLoading.value = false;
   }
 
-  onMounted(loadData);
+  onBeforeMount(loadData);
 
-  watch(i18n.locale, async () => {
-    await loadData();
-  });
+  watch(locale, loadData, { flush: 'post' });
 
   const isWide = computed(() => {
     let featuredWide = false;

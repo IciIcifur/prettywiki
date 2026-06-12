@@ -127,6 +127,10 @@ export interface Featured {
   mostread: FeaturedMostRead;
   image: FeaturedImage;
   news: FeaturedNews[];
+  dyk: {
+    html: string;
+    text: string;
+  }[];
 }
 
 // PHP

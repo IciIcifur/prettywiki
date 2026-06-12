@@ -50,7 +50,7 @@ export function getRequiredTitles(locale: string) {
   const day2 = twoDigits(day);
 
   const key = locale as keyof typeof pagesMap;
-  let titles = [pagesMap[key].tfa, pagesMap[key].dyk];
+  let titles = [pagesMap[key].tfa];
   if (key === 'ru')
     titles = [
       ...titles,

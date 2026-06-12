@@ -56,39 +56,38 @@ export async function GetMaterialsOfTheDay(
   locale: string
 ): Promise<MaterialsOfTheDay | null> {
   const result = await GetFeatured(locale);
-  if (result) {
-    function trimTitle(title: string) {
-      return title?.replace('File:', '').split('.').slice(0, -1).join('.');
-    }
+  if (!result) return null;
 
-    const { tfa, image } = result;
-
-    const featuredPicture: Picture = {
-      src: image.image.source,
-      title: trimTitle(image.title),
-      description: image.description.text,
-      author: image.artist.text,
-      location:
-        image.structured.captions[locale] || image.structured.captions['en'],
-    };
-
-    const featuredArticle: ArticleSummary | null = tfa
-      ? {
-          title: tfa.titles.normalized,
-          description: tfa.description,
-          image: tfa.originalimage?.source || '',
-          summary: tfa.extract,
-        }
-      : null;
-
-    const goodArticle = null;
-    const facts = null;
-
-    console.log(await GetMainPageContents(locale));
-
-    return { featuredPicture, featuredArticle, goodArticle, facts };
+  function trimTitle(title: string) {
+    return title?.replace('File:', '').split('.').slice(0, -1).join('.');
   }
-  return null;
+
+  const { tfa, image, dyk } = result;
+
+  const featuredPicture: Picture = {
+    src: image.image.source,
+    title: trimTitle(image.title),
+    description: image.description.text,
+    author: image.artist.text,
+    location:
+      image.structured.captions[locale] || image.structured.captions['en'],
+  };
+
+  const featuredArticle: ArticleSummary | null = tfa
+    ? {
+        title: tfa.titles.normalized,
+        description: tfa.description,
+        image: tfa.originalimage?.source || '',
+        summary: tfa.extract,
+      }
+    : null;
+
+  const goodArticle = null;
+  const facts = dyk.map((fact) => fact.html);
+
+  console.log(await GetMainPageContents(locale));
+
+  return { featuredPicture, featuredArticle, goodArticle, facts };
 }
 
 export async function SearchForPage(

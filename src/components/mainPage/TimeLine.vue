@@ -66,8 +66,8 @@
         class="pointer-events-none absolute top-0 right-0 z-10 h-full w-20 bg-gradient-to-l from-[var(--ui-bg)] to-transparent sm:w-40"
       />
       <div
-        v-if="!loading"
         ref="scrollRef"
+        v-if="!loading"
         class="hide-scrollbar flex w-full overflow-x-auto scroll-smooth pl-40"
       >
         <UTimeline
