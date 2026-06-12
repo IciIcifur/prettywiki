@@ -4,4 +4,5 @@ export default {
     extend: {},
   },
   plugins: [],
+  safelist: ['lg:col-span-2', 'lg:col-span-3', 'lg:col-span-5'],
 };

@@ -1,1 +1,2 @@
+pnpm lintFix
 pnpm prettier --write .
