@@ -10,6 +10,7 @@ import MainLayout from './layouts/MainLayout.vue';
 import { createI18n } from 'vue-i18n';
 import customEn from './assets/dictionaries/en.json';
 import customRu from './assets/dictionaries/ru.json';
+import WikiPage from './pages/WikiPage.vue';
 
 const app = createApp(App);
 const routes = [
@@ -19,6 +20,7 @@ const routes = [
     children: [
       { path: '', name: 'Главная', component: MainPage },
       { path: 'login', name: 'Вход', component: LoginPage },
+      { path: 'wiki/:title', name: 'Wiki', component: WikiPage },
     ],
   },
 ];

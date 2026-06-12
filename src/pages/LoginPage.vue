@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useUserStore } from '../stores/userStore.ts';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, ref } from 'vue';
   import type {
     SignInFormSchemaType,
     SignUpFormSchemaType,
@@ -16,11 +16,11 @@
 
   const activeTab = ref('0');
 
-  const signInFormValue = reactive<SignInFormSchemaType>({
+  const signInFormValue = ref<SignInFormSchemaType>({
     login: '',
     password: '',
   });
-  const signUpFormValue = reactive<SignUpFormSchemaType>({
+  const signUpFormValue = ref<SignUpFormSchemaType>({
     login: '',
     password: '',
     email: undefined,
@@ -28,7 +28,7 @@
 
   async function onSubmit() {
     if (activeTab.value === '0') {
-      const userData = await GetUserByLogin(signInFormValue.login);
+      const userData = await GetUserByLogin(signInFormValue.value.login);
       if (userData) userStore.login(userData);
       else toast.add({ color: 'error', title: t('login.userDoesntExist') });
     } else {
@@ -49,8 +49,9 @@
   );
   const actionDisabled = computed<boolean>(() => {
     try {
-      if (activeTab.value === '0') signInFormSchema.parse(signInFormValue);
-      else signUpFormSchema.parse(signUpFormValue);
+      if (activeTab.value === '0')
+        signInFormSchema.parse(signInFormValue.value);
+      else signUpFormSchema.parse(signUpFormValue.value);
       return false;
     } catch {
       return true;
@@ -58,7 +59,7 @@
   });
   const alreadySignedInDescription = computed(() =>
     t('login.alreadySignedIn.description', {
-      login: `<span class="font-medium text-cyan-500 dark:text-cyan-400">${
+      login: `<span class="font-medium text-secondary">${
         userStore.user?.login
       }</span>`,
     })
@@ -79,11 +80,11 @@
           <UButton
             @click="userStore.logout"
             :label="t('login.signOut')"
+            color="error"
             size="lg"
             variant="ghost"
-            color="error"
           />
-          <UButton to="/" :label="t('login.toMain')" variant="link" />
+          <UButton :label="t('login.toMain')" to="/" variant="link" />
         </div>
       </template>
     </UCard>
@@ -97,20 +98,28 @@
           }}
         </h4>
       </template>
-      <UTabs v-model="activeTab" :items="items" color="neutral" class="w-full">
+      <UTabs
+        v-model="activeTab"
+        :activation-mode="'automatic'"
+        :default-value="'0'"
+        :items="items"
+        :unmount-on-hide="false"
+        class="w-full"
+        color="neutral"
+      >
         <template #content="{ index }">
-          <SignInForm v-if="index == 0" :state="signInFormValue" />
-          <SignUpForm v-else :state="signUpFormValue" />
+          <SignInForm v-if="index == 0" v-model:state="signInFormValue" />
+          <SignUpForm v-else v-model:state="signUpFormValue" />
         </template>
       </UTabs>
 
       <template #footer>
         <div class="flex h-8 items-center justify-between gap-4">
           <UButton
-            to="/"
             :label="t('login.toMain')"
-            variant="link"
             color="neutral"
+            to="/"
+            variant="link"
           />
           <UButton
             @click.prevent="onSubmit"

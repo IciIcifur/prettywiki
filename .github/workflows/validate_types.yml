@@ -1,0 +1,26 @@
+name: Validate types
+run-name: Validating TypeScript and Vue types...
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - master
+jobs:
+  Check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: TS check
+        run: pnpm checkTS
+      - run: echo "TS / ${{ job.status }}."
+
+      - name: Vue check
+        run: pnpm checkVue
+      - run: echo "Vue / ${{ job.status }}."

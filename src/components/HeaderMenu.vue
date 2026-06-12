@@ -14,8 +14,8 @@
   >
     <div class="flex h-fit flex-col items-start justify-center">
       <ULink
+        class="font-cormorant text-primary hover:dark:text-primary-500 hover:text-primary-400 text-4xl font-black transition-colors"
         to="/"
-        class="font-cormorant text-4xl font-black text-indigo-500 transition-colors hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-500"
       >
         <p>
           {{ t('header.title') }}
@@ -37,7 +37,7 @@
       }"
       class="flex sm:hidden"
     >
-      <UButton icon="i-lucide-menu" color="secondary" variant="soft" />
+      <UButton color="secondary" icon="i-lucide-menu" variant="soft" />
 
       <template #locale>
         <div class="flex h-full w-full items-center justify-center">
