@@ -10,11 +10,23 @@ const ruFieldsMap = {
   width: 'ширина',
 };
 
-async function parseRevisions(
+function getImageUrl(rawName: string | undefined, locale: string): string {
+  if (!rawName) return '';
+
+  const cleanName = rawName
+    .replace(/^(Файл:|File:|Изображение:|Image:)/i, '')
+    .trim();
+
+  if (!cleanName) return '';
+
+  return `https://${locale}.wikipedia.org/wiki/Special:FilePath/${encodeURIComponent(cleanName)}`;
+}
+
+function parseRevisions(
   revisions: string,
   locale: string,
   type: 'tfa' | 'tga' | 'tfi'
-): Promise<Partial<ArticleSummary> | Picture> {
+): Partial<ArticleSummary> | Picture {
   if (type === 'tfi') {
     try {
       const cleanedWikitext =
@@ -76,18 +88,15 @@ async function parseRevisions(
 
   if (locale === 'ru') {
     const templates = doc.templates();
-
     const articleTemplates = templates.filter((t) =>
       t.wiki?.toLowerCase().includes('заглавная/статья')
     );
+    const randomIndex = Math.floor(Math.random() * articleTemplates.length); // Безопасный рандом
     const selectedTemplate =
-      type === 'tga'
-        ? articleTemplates[Math.floor(Math.random() * 6)]
-        : articleTemplates[0];
+      type === 'tga' ? articleTemplates[randomIndex] : articleTemplates[0];
 
     if (selectedTemplate) {
       const data = selectedTemplate.json();
-
       const cleanSummary = data[ruFieldsMap.summary]
         ? wtf(data[ruFieldsMap.summary]).text()
         : '';
@@ -95,33 +104,7 @@ async function parseRevisions(
       return {
         title: data[ruFieldsMap.title] || '',
         description: data[ruFieldsMap.description] || '',
-        image: data[ruFieldsMap.image],
-        summary: cleanSummary.trim(),
-      } as ArticleSummary;
-    }
-  }
-
-  if (locale === 'en') {
-    const templates = doc.templates();
-
-    const articleTemplates = templates.filter((t) =>
-      t.wiki?.toLowerCase().includes('заглавная/статья')
-    );
-    const selectedTemplate =
-      type === 'tga'
-        ? articleTemplates[Math.floor(Math.random() * 6)]
-        : articleTemplates[0];
-
-    if (selectedTemplate) {
-      const data = selectedTemplate.json();
-
-      console.log(data);
-      const cleanSummary = data.summary ? wtf(data.summary.text()) : '';
-
-      return {
-        title: data.title || '',
-        description: data.description || '',
-        image: data.image,
+        image: getImageUrl(data[ruFieldsMap.image], locale),
         summary: cleanSummary.trim(),
       } as ArticleSummary;
     }
@@ -130,16 +113,11 @@ async function parseRevisions(
   return { title: '', description: '', summary: '' };
 }
 
-function parseImages(images: string[]): string {
-  console.log(images);
-  return '';
-}
-
-export default async function parseTemplate(
+export default function parseTemplate(
   template: RawContent,
   locale: string,
   type: 'tfa' | 'tga' | 'tfi'
-): Promise<ArticleSummary | Picture> {
+): ArticleSummary | Picture {
   let article: ArticleSummary | Picture = {
     title: '',
     description: '',
@@ -149,10 +127,8 @@ export default async function parseTemplate(
 
   const { revisions, images } = template;
 
-  if (revisions) article = await parseRevisions(revisions, locale, type);
-  if (images && type !== 'tfi')
-    article = { ...article, image: parseImages(images) };
-
-  console.log(article);
+  if (revisions) article = parseRevisions(revisions, locale, type);
+  if (images?.length === 1)
+    article = { ...article, image: getImageUrl(images[0], locale) };
   return article;
 }
