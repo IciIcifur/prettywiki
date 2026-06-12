@@ -26,22 +26,31 @@
       :src="article.src"
       class="h-fit w-fit"
     />
-    <div class="flex w-full items-start justify-between gap-4">
+    <div class="flex w-full flex-wrap items-center justify-between gap-4">
       <div class="flex flex-col gap-2">
-        <p v-if="imageDate" class="flex items-center gap-2">
+        <p v-if="imageDate" class="flex items-start gap-2">
           <UIcon
-            class="size-5 text-neutral-500"
+            class="my-1 size-5 shrink-0 text-neutral-500"
             name="i-lucide-calendar-days"
           />
           {{ imageDate }}
         </p>
-        <p v-if="article.location" class="flex items-center gap-2">
-          <UIcon class="size-5 text-neutral-500" name="i-lucide-map-pin" />
+        <p v-if="article.location" class="flex items-start gap-2">
+          <UIcon
+            class="my-1 size-5 shrink-0 text-neutral-500"
+            name="i-lucide-map-pin"
+          />
           {{ article.location }}
         </p>
       </div>
-      <p v-if="article.author" class="flex items-center gap-2 font-medium">
-        <UIcon class="size-5 text-neutral-500" name="i-lucide-camera" />
+      <p
+        v-if="article.author"
+        class="line-clamp-1 flex w-full items-start gap-2 font-medium"
+      >
+        <UIcon
+          class="my-0.5 size-5 shrink-0 text-neutral-500"
+          name="i-lucide-camera"
+        />
         {{ article.author }}
       </p>
     </div>

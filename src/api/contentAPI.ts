@@ -91,12 +91,20 @@ export async function GetMaterialsOfTheDay(
   } = await GetMainPageContents(locale);
 
   if (!featuredArticle && rawTfa)
-    featuredArticle = await parseTemplate(rawTfa, locale, 'tfa');
-  if (rawTga) goodArticle = await parseTemplate(rawTga, locale, 'tga');
+    featuredArticle = (await parseTemplate(
+      rawTfa,
+      locale,
+      'tfa'
+    )) as ArticleSummary;
+  if (rawTga)
+    goodArticle = (await parseTemplate(
+      rawTga,
+      locale,
+      'tga'
+    )) as ArticleSummary;
 
-  if (locale === 'en' && rawTfi) {
-    featuredPicture = await parseTemplate(rawTfi, locale, 'tfi');
-  }
+  if (locale === 'en' && rawTfi)
+    featuredPicture = (await parseTemplate(rawTfi, locale, 'tfi')) as Picture;
 
   return { featuredPicture, featuredArticle, goodArticle, facts };
 }
