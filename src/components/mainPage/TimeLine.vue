@@ -1,23 +1,25 @@
 <script setup lang="ts">
-  import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+  import { computed, onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
   import type { TimelineItem } from '@nuxt/ui/components/Timeline.vue';
   import { GetHistoryForThisDay } from '../../api/contentAPI.ts';
   import { useI18n } from 'vue-i18n';
   import { useTimelineCenterIndex } from '../../composibles/useTimelineCentralIndex.ts';
+  import TimelineItemSkeleton from '../timeline/TimelineItemSkeleton.vue';
 
-  const i18n = useI18n();
+  const { locale } = useI18n();
   const scrollRef = ref<null | HTMLElement>(null);
   const centerIndex = useTimelineCenterIndex(scrollRef);
 
   const date = new Date();
   const localizedDate = computed(() =>
-    date.toLocaleDateString(i18n.locale.value, {
+    date.toLocaleDateString(locale.value, {
       day: 'numeric',
       month: 'long',
     })
   );
 
   const items = ref<TimelineItem[]>([]);
+  const loading = ref(false);
 
   const scrollToRight = () => {
     if (scrollRef.value)
@@ -25,22 +27,24 @@
   };
 
   async function loadItems() {
-    const result = await GetHistoryForThisDay(i18n.locale.value);
-    if (result) items.value = result;
+    loading.value = true;
+    const result = await GetHistoryForThisDay(locale.value);
+    if (result) items.value = result as TimelineItem[];
     else items.value = [];
+    loading.value = false;
   }
 
-  onMounted(async () => {
+  onBeforeMount(async () => {
     await loadItems();
     scrollToRight();
 
     window.addEventListener('resize', scrollToRight);
   });
-  onUnmounted(() => {
+  onBeforeUnmount(() => {
     window.removeEventListener('resize', scrollToRight);
   });
 
-  watch(i18n.locale, async () => {
+  watch(locale, async () => {
     await loadItems();
     scrollToRight();
   });
@@ -62,6 +66,7 @@
         class="pointer-events-none absolute top-0 right-0 z-10 h-full w-20 bg-gradient-to-l from-[var(--ui-bg)] to-transparent sm:w-40"
       />
       <div
+        v-if="!loading"
         ref="scrollRef"
         class="hide-scrollbar flex w-full overflow-x-auto scroll-smooth pl-40"
       >
@@ -88,6 +93,9 @@
           </template>
         </UTimeline>
         <div class="hidden min-w-[30%] sm:flex" />
+      </div>
+      <div v-else class="flex gap-0 overflow-clip">
+        <TimelineItemSkeleton :key="_" v-for="_ in [1, 2, 3, 4]" />
       </div>
     </div>
   </div>
