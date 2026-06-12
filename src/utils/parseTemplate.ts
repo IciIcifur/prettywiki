@@ -42,7 +42,7 @@ function parseRevisions(
         ? `https://en.wikipedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}`
         : '';
 
-      const firstLink = doc.links()[0];
+      const firstLink: any = doc.links()[0];
       let title = 'Picture of the Day';
 
       if (firstLink) {
@@ -88,7 +88,7 @@ function parseRevisions(
 
   if (locale === 'ru') {
     const templates = doc.templates();
-    const articleTemplates = templates.filter((t) =>
+    const articleTemplates = templates.filter((t: any) =>
       t.wiki?.toLowerCase().includes('заглавная/статья')
     );
     const randomIndex = Math.floor(Math.random() * articleTemplates.length); // Безопасный рандом
@@ -97,14 +97,17 @@ function parseRevisions(
 
     if (selectedTemplate) {
       const data = selectedTemplate.json();
-      const cleanSummary = data[ruFieldsMap.summary]
-        ? wtf(data[ruFieldsMap.summary]).text()
+      const cleanSummary = data[ruFieldsMap.summary as keyof typeof data]
+        ? wtf(data[ruFieldsMap.summary as keyof typeof data]).text()
         : '';
 
       return {
-        title: data[ruFieldsMap.title] || '',
-        description: data[ruFieldsMap.description] || '',
-        image: getImageUrl(data[ruFieldsMap.image], locale),
+        title: data[ruFieldsMap.title as keyof typeof data] || '',
+        description: data[ruFieldsMap.description as keyof typeof data] || '',
+        image: getImageUrl(
+          data[ruFieldsMap.image as keyof typeof data],
+          locale
+        ),
         summary: cleanSummary.trim(),
       } as ArticleSummary;
     }
@@ -127,7 +130,8 @@ export default function parseTemplate(
 
   const { revisions, images } = template;
 
-  if (revisions) article = parseRevisions(revisions, locale, type);
+  if (revisions)
+    Object.assign(article, parseRevisions(revisions, locale, type));
   if (images?.length === 1)
     article = { ...article, image: getImageUrl(images[0], locale) };
   return article;

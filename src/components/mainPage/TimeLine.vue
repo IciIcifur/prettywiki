@@ -29,7 +29,7 @@
   async function loadItems() {
     loading.value = true;
     const result = await GetHistoryForThisDay(locale.value);
-    if (result) items.value = result as TimelineItem[];
+    if (result) items.value = result as any[];
     else items.value = [];
     loading.value = false;
   }
