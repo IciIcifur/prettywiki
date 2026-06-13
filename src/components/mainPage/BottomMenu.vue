@@ -71,11 +71,11 @@
       :text="item.tooltip"
     >
       <UButton
+        @click.stop="item.onClick"
         :color="item.color"
         :to="item.to"
         class="w-full cursor-pointer justify-center"
         size="xl"
-        @click.stop="item.onClick"
         variant="ghost"
       >
         <UIcon :class="`text-${item.color} size-6`" :name="item.icon" />
