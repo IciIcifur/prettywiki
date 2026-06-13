@@ -70,6 +70,7 @@ export async function ExpandTemplateRequest(
     return null;
   }
 }
+
 /** Request to Wikipedia REST API **/
 export async function GetRequest(locale: string, url: string, params?: any) {
   try {
@@ -181,6 +182,14 @@ export async function GetFeatured(locale: string): Promise<Featured | null> {
     `feed/featured/${date.getFullYear()}/${twoDigits(date.getMonth() + 1)}/${twoDigits(date.getDate())}`
   );
 }
+
+/** @returns page title, page image and page description **/
+export async function GetRandomPage(
+  locale: string
+): Promise<PageSummary | null> {
+  return await GetRequest(locale, `page/random/summary/`);
+}
+
 /** @returns page title, page image and page description **/
 export async function GetPageSummary(
   locale: string,

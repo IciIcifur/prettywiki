@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { ArticleSummary, Picture } from '../../types/types.ts';
   import ArticleSkeleton from './ArticleSkeleton.vue';
+  import getPageUrl from '../../utils/getPageUrl.ts';
 
   defineProps<{
     article: ArticleSummary | Picture | string[] | null | undefined;
@@ -25,9 +26,14 @@
       <ListArticleContent v-if="Array.isArray(article)" :article="article" />
       <template v-else>
         <div class="flex w-full flex-col gap-0">
-          <h4 class="line-clamp-1">
-            {{ article.title }}
-          </h4>
+          <ULink
+            class="text-default hover:text-primary transition-colors"
+            :to="getPageUrl(article.title)"
+          >
+            <h4 class="line-clamp-1">
+              {{ article.title }}
+            </h4>
+          </ULink>
           <p class="line-clamp-1 flex w-full text-sm text-neutral-500 italic">
             {{ article.description }}
           </p>

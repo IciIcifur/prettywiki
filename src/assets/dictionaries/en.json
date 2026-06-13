@@ -21,7 +21,8 @@
         "random": "Random article",
         "news": "Recent news",
         "donate": "Donate to resource"
-      }
+      },
+      "getRandomError": "Failed to get random article..."
     },
     "timeline": {
       "title": "On that day..."

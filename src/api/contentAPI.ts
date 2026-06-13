@@ -11,6 +11,7 @@ import {
   GetFeatured,
   GetMainPageContents,
   GetOnThisDay,
+  GetRandomPage,
   SearchRequest,
 } from './api.ts';
 import parseTemplate from '../utils/parseTemplate.ts';
@@ -66,7 +67,6 @@ export async function GetMaterialsOfTheDay(
   const { tfa, image, dyk } = result;
   const facts = dyk.map((fact) => fact.html);
 
-  console.log(result);
   let featuredPicture: Picture = {
     src: image.image.source,
     title: trimTitle(image.title),
@@ -126,4 +126,13 @@ export async function SearchForPage(
     });
 
   return null;
+}
+
+export async function GetRandomPageTitle(
+  locale: string
+): Promise<string | null> {
+  const summary = await GetRandomPage(locale);
+  if (!summary) return null;
+
+  return summary.titles.normalized;
 }

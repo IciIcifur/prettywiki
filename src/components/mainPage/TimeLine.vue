@@ -5,6 +5,7 @@
   import { useI18n } from 'vue-i18n';
   import { useTimelineCenterIndex } from '../../composibles/useTimelineCentralIndex.ts';
   import TimelineItemSkeleton from '../timeline/TimelineItemSkeleton.vue';
+  import getPageUrl from '../../utils/getPageUrl.ts';
 
   const { locale } = useI18n();
   const scrollRef = ref<null | HTMLElement>(null);
@@ -85,7 +86,7 @@
         >
           <template #title="{ item }">
             <ULink
-              :to="`/wiki/${item.title?.replace(/ /g, '_')}`"
+              :to="getPageUrl(item.title)"
               class="hover:text-primary line-clamp-1 w-full text-[var(--ui-text)] transition-colors"
             >
               {{ item.title }}
