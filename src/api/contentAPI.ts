@@ -11,10 +11,13 @@ import {
   GetFeatured,
   GetMainPageContents,
   GetOnThisDay,
-  GetRandomPage,
+  GetPageHTML,
+  GetPageMedia,
+  GetRandomPageSummary,
   SearchRequest,
 } from './api.ts';
 import parseTemplate from '../utils/parseTemplate.ts';
+import type { PageMediaItem } from '../types/apiTypes.ts';
 
 export async function GetHistoryForThisDay(
   locale: string
@@ -131,8 +134,26 @@ export async function SearchForPage(
 export async function GetRandomPageTitle(
   locale: string
 ): Promise<string | null> {
-  const summary = await GetRandomPage(locale);
+  const summary = await GetRandomPageSummary(locale);
   if (!summary) return null;
 
   return summary.titles.normalized;
+}
+
+export async function GetPageByTitle(title: string, locale: string) {
+  const result: {
+    html: string | null;
+    media: { items: PageMediaItem[] } | null;
+  } = { html: null, media: null };
+  try {
+    result.html = await GetPageHTML(locale, title);
+  } catch (e: any) {
+    console.error(`Failed to load page html: ${e}`);
+  }
+  try {
+    result.media = await GetPageMedia(locale, title);
+  } catch (e: any) {
+    console.error(`Failed to load page media: ${e}`);
+  }
+  return result;
 }

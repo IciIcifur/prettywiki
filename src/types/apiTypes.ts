@@ -73,6 +73,13 @@ export interface PageSummary {
     lon: number;
   };
 }
+export interface PageMediaItem {
+  title: string;
+  leadImage: boolean;
+  type: 'image' | 'video';
+  section_id: number;
+  srcset: { src: string }[];
+}
 export interface OnThisDay {
   events: { pages: MainInfo[]; text: string; year: number }[];
 }

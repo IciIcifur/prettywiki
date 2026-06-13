@@ -3,6 +3,7 @@ import type {
   Featured,
   MainPageRawContents,
   OnThisDay,
+  PageMediaItem,
   PageSummary,
   ProcessedQueryResult,
   QueryResult,
@@ -184,7 +185,7 @@ export async function GetFeatured(locale: string): Promise<Featured | null> {
 }
 
 /** @returns page title, page image and page description **/
-export async function GetRandomPage(
+export async function GetRandomPageSummary(
   locale: string
 ): Promise<PageSummary | null> {
   return await GetRequest(locale, `page/random/summary/`);
@@ -196,4 +197,20 @@ export async function GetPageSummary(
   page: string
 ): Promise<PageSummary | null> {
   return await GetRequest(locale, `page/summary/${page}`);
+}
+
+/** @returns page html **/
+export async function GetPageHTML(
+  locale: string,
+  page: string
+): Promise<string | null> {
+  return await GetRequest(locale, `page/html/${page}`);
+}
+
+/** @returns media files on the page **/
+export async function GetPageMedia(
+  locale: string,
+  page: string
+): Promise<{ items: PageMediaItem[] } | null> {
+  return await GetRequest(locale, `page/media-list/${page}`);
 }
