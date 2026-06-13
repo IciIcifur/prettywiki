@@ -1,35 +1,22 @@
 <script setup lang="ts">
-  import { computed, onMounted, ref, watch } from 'vue';
-  import { GetMaterialsOfTheDay } from '../../api/contentAPI.ts';
+  import { computed } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import type { MaterialsOfTheDay } from '../../types/types.ts';
+  import { storeToRefs } from 'pinia';
+  import { useMainPageStore } from '../../stores/mainPageStore.ts';
 
   const WIDE_SYMBOL_COUNT = 1600;
 
   const { locale } = useI18n();
-  const content = ref<MaterialsOfTheDay | null>(null);
+  const { featured } = storeToRefs(useMainPageStore());
 
-  const isLoading = ref<boolean>(false);
-
-  async function loadData() {
-    isLoading.value = true;
-
-    const response = await GetMaterialsOfTheDay(locale.value);
-    if (response) content.value = response;
-    else content.value = null;
-
-    isLoading.value = false;
-  }
-
-  onMounted(loadData);
-
-  watch(locale, loadData, { flush: 'post' });
+  const content = computed(() => featured.value[locale.value].data);
+  const loading = computed(() => featured.value[locale.value].isLoading);
 
   const isWide = computed(() => {
     let featuredWide = false;
     let goodWide = false;
-    if (!isLoading.value && content.value) {
-      const { featuredArticle, goodArticle } = content.value;
+    if (!loading.value && content.value) {
+      const { tfa: featuredArticle, tga: goodArticle } = content.value;
 
       if (featuredArticle && featuredArticle.summary.length > WIDE_SYMBOL_COUNT)
         featuredWide = true;
@@ -44,31 +31,31 @@
 <template>
   <div class="grid w-full grid-flow-dense grid-cols-1 gap-4 lg:grid-cols-5">
     <ArticleMiniature
-      v-if="isLoading || content?.featuredPicture"
-      :article="content?.featuredPicture"
+      v-if="loading || content?.tfi"
+      :article="content?.tfi"
       :col-span="isWide.featured ? 5 : 2"
-      :is-loading="isLoading"
+      :is-loading="loading"
       article-type="image"
     />
     <ArticleMiniature
-      v-if="isLoading || content?.featuredArticle"
-      :article="content?.featuredArticle"
+      v-if="loading || content?.tfa"
+      :article="content?.tfa"
       :col-span="isWide.featured ? 5 : 3"
-      :is-loading="isLoading"
+      :is-loading="loading"
       article-type="featured"
     />
     <ArticleMiniature
-      v-if="isLoading || content?.goodArticle"
-      :article="content?.goodArticle"
+      v-if="loading || content?.tga"
+      :article="content?.tga"
       :col-span="isWide.good ? 5 : 3"
-      :is-loading="isLoading"
+      :is-loading="loading"
       article-type="good"
     />
     <ArticleMiniature
-      v-if="isLoading || content?.facts"
-      :article="content?.facts"
+      v-if="loading || content?.dyk"
+      :article="content?.dyk"
       :col-span="isWide.good ? 5 : 2"
-      :is-loading="isLoading"
+      :is-loading="loading"
       article-type="facts"
     />
   </div>
