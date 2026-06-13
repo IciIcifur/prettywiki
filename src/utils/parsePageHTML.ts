@@ -2,6 +2,7 @@ import type {
   ArticleContentItem,
   InfoBoxItem,
   ListItem,
+  TableItem,
 } from '../types/types.ts';
 
 const generateId = () => crypto.randomUUID?.();
@@ -11,6 +12,8 @@ function removeStyles(el: Element) {
   clone.querySelectorAll('style').forEach((s) => s.remove());
   return clone.innerHTML.trim();
 }
+
+// parser.ts
 
 function parseElement(el: Element): ArticleContentItem | null {
   const tagName = el.tagName.toLowerCase();
@@ -23,8 +26,13 @@ function parseElement(el: Element): ArticleContentItem | null {
     return null;
   }
 
-  if (el.classList.contains('infobox') || tagName === 'table') {
+  // Инфобокс — до общего table-чека
+  if (el.classList.contains('infobox')) {
     return parseInfoBox(el);
+  }
+
+  if (tagName === 'table') {
+    return parseTable(el);
   }
 
   if (/^h[1-6]$/.test(tagName)) {
@@ -34,7 +42,7 @@ function parseElement(el: Element): ArticleContentItem | null {
       ? {
           id: generateId(),
           type: 'heading',
-          level: parseInt(tagName.substring(1), 10),
+          level: parseInt(tagName[1], 10),
           text,
         }
       : null;
@@ -44,7 +52,10 @@ function parseElement(el: Element): ArticleContentItem | null {
     return parseListElement(el);
   }
 
-  if (tagName === 'figure' || el.querySelector('img')) {
+  if (
+    tagName === 'figure' ||
+    (tagName !== 'table' && el.querySelector('img'))
+  ) {
     const img = el.querySelector('img');
     if (img) {
       const src = img.getAttribute('src') || '';
@@ -56,10 +67,32 @@ function parseElement(el: Element): ArticleContentItem | null {
         ...(figcaption ? { caption: removeStyles(figcaption) } : {}),
       };
     }
-    return null;
   }
 
-  if (tagName === 'p' || tagName === 'div') {
+  // div может содержать таблицы/списки — рекурсируем
+  if (tagName === 'div') {
+    const complexChildren = Array.from(el.children).filter((child) => {
+      const t = child.tagName.toLowerCase();
+      return t === 'table' || t === 'ul' || t === 'ol' || t === 'figure';
+    });
+
+    if (complexChildren.length > 0) {
+      // Если внутри сложные блоки — парсим детей по одному
+      // и возвращаем первый (или можно вернуть массив, если нужна группировка)
+      for (const child of Array.from(el.children)) {
+        const parsed = parseElement(child);
+        if (parsed) return parsed; // упрощение: берём первый значимый блок
+      }
+      return null;
+    }
+
+    const htmlContent = removeStyles(el);
+    return htmlContent
+      ? { id: generateId(), type: 'text', text: htmlContent }
+      : null;
+  }
+
+  if (tagName === 'p') {
     const htmlContent = removeStyles(el);
     return htmlContent
       ? { id: generateId(), type: 'text', text: htmlContent }
@@ -67,6 +100,40 @@ function parseElement(el: Element): ArticleContentItem | null {
   }
 
   return null;
+}
+
+function parseTable(el: Element): InfoBoxItem | TableItem {
+  // Инфобоксы могут прийти сюда через tagName === 'table'
+  if (el.classList.contains('infobox')) {
+    return parseInfoBox(el);
+  }
+
+  const caption = el.querySelector('caption');
+  const title = caption?.textContent?.trim();
+
+  // Заголовки столбцов из первой строки с <th>
+  const headerRow = el.querySelector('tr:has(th)');
+  const columns: string[] = headerRow
+    ? Array.from(headerRow.querySelectorAll('th')).map(
+        (th) => th.textContent?.trim() || ''
+      )
+    : [];
+
+  const dataRows = Array.from(el.querySelectorAll('tr')).filter(
+    (tr) => tr.querySelector('td') !== null
+  );
+
+  const rows: Record<string, string>[] = dataRows.map((tr) => {
+    const cells = Array.from(tr.querySelectorAll('th[scope="row"], td'));
+    const row: Record<string, string> = {};
+    cells.forEach((cell, i) => {
+      const key = columns[i] || String(i);
+      row[key] = cell.textContent?.trim() || '';
+    });
+    return row;
+  });
+
+  return { id: generateId(), type: 'table', title, columns, rows };
 }
 
 function parseListElement(el: Element): ListItem {
@@ -77,12 +144,12 @@ function parseListElement(el: Element): ListItem {
     if (li.tagName.toLowerCase() !== 'li') continue;
 
     const liClone = li.cloneNode(true) as Element;
-    const subLists: ListItem[] = [];
+    const nestedLists: ListItem[] = [];
 
     for (const child of Array.from(li.children)) {
       const tag = child.tagName.toLowerCase();
       if (tag === 'ul' || tag === 'ol') {
-        subLists.push(parseListElement(child));
+        nestedLists.push(parseListElement(child));
         const selector = child.id ? `#${child.id}` : child.tagName;
         liClone.querySelector(selector)?.remove();
       }
@@ -90,8 +157,7 @@ function parseListElement(el: Element): ListItem {
 
     items.push({
       title: removeStyles(liClone),
-      children: [],
-      ...(subLists.length > 0 ? { subLists } : {}),
+      children: nestedLists,
     });
   }
 
