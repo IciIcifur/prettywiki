@@ -1,6 +1,160 @@
-import type { ArticleContentItem } from '../types/types.ts';
+import type {
+  ArticleContentItem,
+  InfoBoxItem,
+  ListItem,
+} from '../types/types.ts';
+
+const generateId = () => crypto.randomUUID?.();
+
+function removeStyles(el: Element) {
+  const clone = el.cloneNode(true) as Element;
+  clone.querySelectorAll('style').forEach((s) => s.remove());
+  return clone.innerHTML.trim();
+}
+
+function parseElement(el: Element): ArticleContentItem | null {
+  const tagName = el.tagName.toLowerCase();
+
+  if (
+    el.classList.contains('mw-empty-elt') ||
+    tagName === 'meta' ||
+    tagName === 'style'
+  ) {
+    return null;
+  }
+
+  if (el.classList.contains('infobox') || tagName === 'table') {
+    return parseInfoBox(el);
+  }
+
+  if (/^h[1-6]$/.test(tagName)) {
+    const headlineEl = el.querySelector('.mw-headline');
+    const text = (headlineEl?.innerHTML || el.innerHTML || '').trim();
+    return text
+      ? {
+          id: generateId(),
+          type: 'heading',
+          level: parseInt(tagName.substring(1), 10),
+          text,
+        }
+      : null;
+  }
+
+  if (tagName === 'ul' || tagName === 'ol') {
+    return parseListElement(el);
+  }
+
+  if (tagName === 'figure' || el.querySelector('img')) {
+    const img = el.querySelector('img');
+    if (img) {
+      const src = img.getAttribute('src') || '';
+      const figcaption = el.querySelector('figcaption');
+      return {
+        id: generateId(),
+        type: 'picture',
+        src: src.startsWith('//') ? `https:${src}` : src,
+        ...(figcaption ? { caption: removeStyles(figcaption) } : {}),
+      };
+    }
+    return null;
+  }
+
+  if (tagName === 'p' || tagName === 'div') {
+    const htmlContent = removeStyles(el);
+    return htmlContent
+      ? { id: generateId(), type: 'text', text: htmlContent }
+      : null;
+  }
+
+  return null;
+}
+
+function parseListElement(el: Element): ListItem {
+  const listType = el.tagName.toLowerCase() === 'ol' ? 'ordered' : 'bullet';
+  const items: ListItem['children'] = [];
+
+  for (const li of Array.from(el.children)) {
+    if (li.tagName.toLowerCase() !== 'li') continue;
+
+    const liClone = li.cloneNode(true) as Element;
+    const subLists: ListItem[] = [];
+
+    for (const child of Array.from(li.children)) {
+      const tag = child.tagName.toLowerCase();
+      if (tag === 'ul' || tag === 'ol') {
+        subLists.push(parseListElement(child));
+        const selector = child.id ? `#${child.id}` : child.tagName;
+        liClone.querySelector(selector)?.remove();
+      }
+    }
+
+    items.push({
+      title: removeStyles(liClone),
+      children: [],
+      ...(subLists.length > 0 ? { subLists } : {}),
+    });
+  }
+
+  return { id: generateId(), type: 'list', listType, children: items };
+}
+
+function parseInfoBox(el: Element): InfoBoxItem {
+  const rows: InfoBoxItem['rows'] = [];
+  let boxTitle: string | undefined;
+
+  el.querySelectorAll('tr').forEach((tr) => {
+    const th = tr.querySelector('th');
+    const td = tr.querySelector('td');
+
+    if (th && !td) {
+      const text = th.textContent?.trim();
+      if (!boxTitle && text) boxTitle = text;
+      return;
+    }
+
+    if (td) {
+      const cellItems: ArticleContentItem[] = [];
+
+      // Если внутри ячейки сложная структура (есть списки, картинки или несколько параграфов)
+      if (td.querySelector('ul, ol, figure, img, p')) {
+        for (const child of Array.from(td.children)) {
+          const parsedChild = parseElement(child);
+          if (parsedChild) cellItems.push(parsedChild);
+        }
+      }
+
+      // Если внутри ячейки просто текст/ссылки без блочных тегов, или если после парсинга тегов ничего не извлеклось
+      if (cellItems.length === 0 && td.textContent?.trim()) {
+        cellItems.push({
+          id: generateId(),
+          type: 'text',
+          text: removeStyles(td),
+        });
+      }
+
+      rows.push({
+        label: th ? th.textContent?.trim() || null : null,
+        value: cellItems, // Массив полноценных UI-компонентов!
+      });
+    }
+  });
+
+  return { id: generateId(), type: 'infobox', title: boxTitle, rows };
+}
 
 export default function parsePageHTML(html: string): ArticleContentItem[] {
-  console.log(html);
-  return [];
+  const domParser = new DOMParser();
+  const document = domParser.parseFromString(html, 'text/html');
+  const sections = document.getElementsByTagName('section');
+
+  const uiBlocks: ArticleContentItem[] = [];
+  for (const section of Array.from(sections)) {
+    for (const el of Array.from(section.children)) {
+      const parsed = parseElement(el);
+      if (parsed) uiBlocks.push(parsed);
+    }
+  }
+
+  console.log(uiBlocks);
+  return uiBlocks;
 }

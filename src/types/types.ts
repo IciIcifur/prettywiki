@@ -42,31 +42,49 @@ export interface Article {
 interface BaseItem {
   id: string;
 }
-interface HeadingItem extends BaseItem {
+export interface HeadingItem extends BaseItem {
   type: 'heading';
   level: number;
   text: string;
 }
-interface ListItem extends BaseItem {
+export interface ListItem extends BaseItem {
   type: 'list';
   listType: 'ordered' | 'bullet';
   children: {
     title: string;
-    children: ListItem;
+    children: ListItem[];
   }[];
 }
-interface PictureItem extends BaseItem {
+export interface PictureItem extends BaseItem {
   type: 'picture';
   src: string;
   caption?: string;
 }
-interface TextItem extends BaseItem {
+export interface TextItem extends BaseItem {
   type: 'text';
   text: string;
+}
+
+export interface InfoBoxItem extends BaseItem {
+  type: 'infobox';
+  title?: string;
+  rows: {
+    label: string | null;
+    value: ArticleContentItem[];
+  }[];
+}
+
+export interface TableItem extends BaseItem {
+  type: 'table';
+  title?: string;
+  columns: string[];
+  rows: Record<string, any>[];
 }
 
 export type ArticleContentItem =
   | HeadingItem
   | ListItem
   | PictureItem
-  | TextItem;
+  | TextItem
+  | InfoBoxItem
+  | TableItem;
