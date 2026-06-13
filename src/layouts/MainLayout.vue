@@ -11,6 +11,8 @@
     await userStore.restoreUser();
     const restoredLocale = GetLocaleFromCookie();
     if (restoredLocale) i18n.locale.value = restoredLocale;
+
+    userStore.dataRestored = true;
   });
 </script>
 

@@ -43,21 +43,25 @@ interface BaseItem {
   id: string;
 }
 interface HeadingItem extends BaseItem {
+  type: 'heading';
   level: number;
   text: string;
 }
 interface ListItem extends BaseItem {
-  type: 'ordered' | 'bullet';
+  type: 'list';
+  listType: 'ordered' | 'bullet';
   children: {
     title: string;
     children: ListItem;
   }[];
 }
 interface PictureItem extends BaseItem {
+  type: 'picture';
   src: string;
   caption?: string;
 }
 interface TextItem extends BaseItem {
+  type: 'text';
   text: string;
 }
 
