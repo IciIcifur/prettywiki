@@ -3,7 +3,6 @@ import PickTimeLineIcon from '../utils/timelineIcon.ts';
 import type {
   ArticleSummary,
   EventItem,
-  MaterialsOfTheDay,
   Picture,
   SearchItem,
 } from '../types/types.ts';
@@ -17,7 +16,6 @@ import {
   SearchRequest,
 } from './api.ts';
 import parseTemplate from '../utils/parseTemplate.ts';
-import type { PageMediaItem } from '../types/apiTypes.ts';
 
 export async function GetHistoryForThisDay(
   locale: string
@@ -57,9 +55,7 @@ export async function GetHistoryForThisDay(
   return result;
 }
 
-export async function GetMaterialsOfTheDay(
-  locale: string
-): Promise<MaterialsOfTheDay | null> {
+export async function GetMaterialsOfTheDay(locale: string) {
   const result = await GetFeatured(locale);
   if (!result) return null;
 
@@ -141,19 +137,18 @@ export async function GetRandomPageTitle(
 }
 
 export async function GetPageByTitle(title: string, locale: string) {
-  const result: {
-    html: string | null;
-    media: { items: PageMediaItem[] } | null;
-  } = { html: null, media: null };
   try {
-    result.html = await GetPageHTML(locale, title);
+    return await GetPageHTML(locale, title);
   } catch (e: any) {
     console.error(`Failed to load page html: ${e}`);
+    return null;
   }
+}
+export async function GetPageMediaByTitle(title: string, locale: string) {
   try {
-    result.media = await GetPageMedia(locale, title);
+    return await GetPageMedia(locale, title);
   } catch (e: any) {
     console.error(`Failed to load page media: ${e}`);
+    return null;
   }
-  return result;
 }

@@ -41,6 +41,11 @@
       "getDYKError": "Не удалось загрузить факты дня"
     }
   },
+  "wiki": {
+    "toasts": {
+      "getArticleError": "Не удалось загрузить статью"
+    }
+  },
   "login": {
     "header": {
       "signIn": "Вход в PrettyWiki",

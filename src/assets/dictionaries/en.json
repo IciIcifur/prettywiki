@@ -41,6 +41,11 @@
       "getDYKError": "Failed to load the featured facts"
     }
   },
+  "wiki": {
+    "toasts": {
+      "getArticleError": "Failed to load article"
+    }
+  },
   "login": {
     "header": {
       "signIn": "Log in PrettyWiki",

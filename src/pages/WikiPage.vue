@@ -1,27 +1,23 @@
 <script setup lang="ts">
   import { useRoute } from 'vue-router';
-  import { computed, onMounted, ref, watch } from 'vue';
-  import { GetPageByTitle } from '../api/contentAPI.ts';
+  import { computed, onMounted, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
+  import { storeToRefs } from 'pinia';
+  import { useWikiStore } from '../stores/wikiStore.ts';
 
   const route = useRoute();
   const { locale } = useI18n();
 
   const title = computed(() => route.params.title.toString());
   const normalizedTitle = computed(() => title.value.replaceAll('_', ' '));
-  const rawArticle = ref(null);
-  const loading = ref(true);
 
-  async function fetchArticle() {
-    if (!title.value || !locale.value) return;
-    loading.value = true;
-    rawArticle.value = await GetPageByTitle(title.value, locale.value);
-    console.log(rawArticle.value);
-    loading.value = false;
-  }
+  const { loadPage } = useWikiStore();
+  const { activePage } = storeToRefs(useWikiStore());
 
-  watch([title, locale], fetchArticle, { flush: 'post' });
-  onMounted(async () => await fetchArticle());
+  watch([title, locale], async () => await loadPage(title.value), {
+    flush: 'post',
+  });
+  onMounted(async () => await loadPage(title.value));
 </script>
 
 <template>
@@ -30,6 +26,6 @@
       {{ normalizedTitle }}
     </h1>
 
-    <p class="overflow-clip text-wrap">text here</p>
+    <p class="overflow-clip text-wrap">{{ activePage?.loadTimestamp }}</p>
   </div>
 </template>

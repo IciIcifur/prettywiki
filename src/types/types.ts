@@ -33,9 +33,36 @@ export interface ArticleSummary {
   image: string;
 }
 
-export interface MaterialsOfTheDay {
-  featuredArticle: ArticleSummary | null;
-  goodArticle: ArticleSummary | null;
-  featuredPicture: Picture | null;
-  facts: string[] | null;
+export interface Article {
+  title: string;
+  loadTimestamp: Date | undefined;
+  contents: ArticleContentItem[];
 }
+
+interface BaseItem {
+  id: string;
+}
+interface HeadingItem extends BaseItem {
+  level: number;
+  text: string;
+}
+interface ListItem extends BaseItem {
+  type: 'ordered' | 'bullet';
+  children: {
+    title: string;
+    children: ListItem;
+  }[];
+}
+interface PictureItem extends BaseItem {
+  src: string;
+  caption?: string;
+}
+interface TextItem extends BaseItem {
+  text: string;
+}
+
+export type ArticleContentItem =
+  | HeadingItem
+  | ListItem
+  | PictureItem
+  | TextItem;
