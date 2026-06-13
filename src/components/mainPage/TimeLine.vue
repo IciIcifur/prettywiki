@@ -1,11 +1,18 @@
 <script setup lang="ts">
-  import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-  import type { TimelineItem } from '@nuxt/ui/components/Timeline.vue';
-  import { GetHistoryForThisDay } from '../../api/contentAPI.ts';
+  import {
+    computed,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch,
+  } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useTimelineCenterIndex } from '../../composibles/useTimelineCentralIndex.ts';
   import TimelineItemSkeleton from '../timeline/TimelineItemSkeleton.vue';
   import getPageUrl from '../../utils/getPageUrl.ts';
+  import { useMainPageStore } from '../../stores/mainPageStore.ts';
+  import { storeToRefs } from 'pinia';
 
   const { locale } = useI18n();
   const scrollRef = ref<null | HTMLElement>(null);
@@ -19,24 +26,27 @@
     })
   );
 
-  const items = ref<TimelineItem[]>([]);
-  const loading = ref(false);
+  const { events } = storeToRefs(useMainPageStore());
+
+  const items = computed(
+    () => (events.value[locale.value].data || []) as any[]
+  );
+  const loading = computed(() => events.value[locale.value].isLoading);
 
   const scrollToRight = () => {
     if (scrollRef.value)
       scrollRef.value.scrollLeft = scrollRef.value.scrollWidth;
   };
 
-  async function loadItems() {
-    loading.value = true;
-    const result = await GetHistoryForThisDay(locale.value);
-    if (result) items.value = result as any[];
-    else items.value = [];
-    loading.value = false;
-  }
+  watch([loading, locale], async () => {
+    if (!loading.value) {
+      await nextTick();
+      scrollToRight();
+    }
+  });
 
   onMounted(async () => {
-    await loadItems();
+    await nextTick();
     scrollToRight();
 
     window.addEventListener('resize', scrollToRight);
@@ -44,18 +54,13 @@
   onBeforeUnmount(() => {
     window.removeEventListener('resize', scrollToRight);
   });
-
-  watch(locale, async () => {
-    await loadItems();
-    scrollToRight();
-  });
 </script>
 
 <template>
   <div class="flex w-full flex-col gap-4">
     <h1
       v-if="items.length || loading"
-      class="w-full text-neutral-300 italic dark:text-neutral-700"
+      class="w-full text-neutral-400 italic dark:text-neutral-600"
     >
       {{ localizedDate }}
     </h1>

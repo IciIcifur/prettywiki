@@ -32,6 +32,13 @@
       "good": "Good article",
       "image": "Featured photo",
       "facts": "Did you know..."
+    },
+    "toasts": {
+      "getEventsError": "Failed to load events for this day",
+      "getTFAError": "Failed to load the featured article",
+      "getTGAError": "Failed to load the good article",
+      "getTFIError": "Failed to load picture of the day",
+      "getDYKError": "Failed to load the featured facts"
     }
   },
   "login": {
