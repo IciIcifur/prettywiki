@@ -6,6 +6,7 @@
   import { useWikiStore } from '../stores/wikiStore.ts';
   import { useDebounceFn } from '@vueuse/core';
   import { useUserStore } from '../stores/userStore.ts';
+  import ArticleItem from '../components/articlePage/articleItem.vue';
 
   const route = useRoute();
   const { locale } = useI18n();
@@ -36,10 +37,15 @@
       {{ normalizedTitle }}
     </h1>
 
-    <p class="overflow-clip text-wrap">{{ activePage?.loadTimestamp }}</p>
-
-    <div class="flex flex-col gap-4">
-      <p :key="item.id" v-for="item in activePage?.contents">{{ item.type }}</p>
+    <div class="flex w-full flex-col gap-4">
+      <div
+        :key="item.id"
+        v-for="item in activePage?.contents"
+        :id="item.id"
+        class="flex h-fit w-full overflow-x-clip"
+      >
+        <ArticleItem :item="item" />
+      </div>
     </div>
   </div>
 </template>

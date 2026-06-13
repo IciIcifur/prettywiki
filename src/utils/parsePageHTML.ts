@@ -13,7 +13,20 @@ function removeStyles(el: Element) {
   return clone.innerHTML.trim();
 }
 
-// parser.ts
+function parseChildren(el: Element): ArticleContentItem[] {
+  const result: ArticleContentItem[] = [];
+  for (const child of Array.from(el.children)) {
+    const tag = child.tagName.toLowerCase();
+    // div-обёртки разворачиваем рекурсивно
+    if (tag === 'div' && !child.classList.contains('infobox')) {
+      result.push(...parseChildren(child));
+    } else {
+      const parsed = parseElement(child);
+      if (parsed) result.push(parsed);
+    }
+  }
+  return result;
+}
 
 function parseElement(el: Element): ArticleContentItem | null {
   const tagName = el.tagName.toLowerCase();
@@ -67,29 +80,6 @@ function parseElement(el: Element): ArticleContentItem | null {
         ...(figcaption ? { caption: removeStyles(figcaption) } : {}),
       };
     }
-  }
-
-  // div может содержать таблицы/списки — рекурсируем
-  if (tagName === 'div') {
-    const complexChildren = Array.from(el.children).filter((child) => {
-      const t = child.tagName.toLowerCase();
-      return t === 'table' || t === 'ul' || t === 'ol' || t === 'figure';
-    });
-
-    if (complexChildren.length > 0) {
-      // Если внутри сложные блоки — парсим детей по одному
-      // и возвращаем первый (или можно вернуть массив, если нужна группировка)
-      for (const child of Array.from(el.children)) {
-        const parsed = parseElement(child);
-        if (parsed) return parsed; // упрощение: берём первый значимый блок
-      }
-      return null;
-    }
-
-    const htmlContent = removeStyles(el);
-    return htmlContent
-      ? { id: generateId(), type: 'text', text: htmlContent }
-      : null;
   }
 
   if (tagName === 'p') {
@@ -215,10 +205,7 @@ export default function parsePageHTML(html: string): ArticleContentItem[] {
 
   const uiBlocks: ArticleContentItem[] = [];
   for (const section of Array.from(sections)) {
-    for (const el of Array.from(section.children)) {
-      const parsed = parseElement(el);
-      if (parsed) uiBlocks.push(parsed);
-    }
+    uiBlocks.push(...parseChildren(section));
   }
 
   console.log(uiBlocks);

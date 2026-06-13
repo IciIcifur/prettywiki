@@ -8,7 +8,7 @@
     watch,
   } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { useTimelineCenterIndex } from '../../composibles/useTimelineCentralIndex.ts';
+  import { useTimelineCenterIndex } from '../../composables/useTimelineCentralIndex.ts';
   import TimelineItemSkeleton from '../timeline/TimelineItemSkeleton.vue';
   import getPageUrl from '../../utils/getPageUrl.ts';
   import { useMainPageStore } from '../../stores/mainPageStore.ts';
