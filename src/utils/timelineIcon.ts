@@ -600,7 +600,8 @@ export const iconMap: { keywords: string[]; icon: string }[] = [
 
 export default function PickTimeLineIcon(
   titles: string[],
-  description: string
+  description: string,
+  defaultIcon: string = 'i-lucide-earth'
 ) {
   let text = '';
   for (const title of titles) text += title + ' ';
@@ -611,5 +612,5 @@ export default function PickTimeLineIcon(
       return entry.icon;
     }
   }
-  return 'i-lucide-earth';
+  return defaultIcon;
 }

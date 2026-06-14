@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useRoute } from 'vue-router';
-  import { computed, watch } from 'vue';
+  import { computed, onMounted, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { storeToRefs } from 'pinia';
   import { useWikiStore } from '../stores/wikiStore.ts';
@@ -29,20 +29,23 @@
   watch([title, locale], () => {
     if (dataRestored.value) debouncedLoadPage(locale.value, title.value);
   });
+  onMounted(() => {
+    if (dataRestored.value) debouncedLoadPage(locale.value, title.value);
+  });
 </script>
 
 <template>
   <div class="flex w-full flex-col gap-8">
-    <h1 class="w-full text-neutral-800 italic dark:text-neutral-200">
+    <h1 class="w-full pl-6 text-neutral-800 italic dark:text-neutral-200">
       {{ normalizedTitle }}
     </h1>
 
-    <div class="flex w-full flex-col gap-4">
+    <div class="flex w-full flex-col gap-1">
       <div
         :key="item.id"
         v-for="item in activePage?.contents"
         :id="item.id"
-        class="flex h-fit w-full overflow-x-clip"
+        class="flex h-fit w-full flex-col justify-center gap-0 overflow-x-clip"
       >
         <ArticleItem :item="item" />
       </div>

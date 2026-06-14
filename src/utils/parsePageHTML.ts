@@ -50,7 +50,14 @@ function parseElement(el: Element): ArticleContentItem | null {
 
   if (/^h[1-6]$/.test(tagName)) {
     const headlineEl = el.querySelector('.mw-headline');
-    const text = (headlineEl?.innerHTML || el.innerHTML || '').trim();
+    const source = headlineEl ?? el;
+
+    const clone = source.cloneNode(true) as Element;
+    clone
+      .querySelectorAll('[typeof="mw:FallbackId"]')
+      .forEach((s) => s.remove());
+
+    const text = clone.innerHTML.trim();
     return text
       ? {
           id: generateId(),
