@@ -44,6 +44,10 @@
   "wiki": {
     "toasts": {
       "getArticleError": "Не удалось загрузить статью"
+    },
+    "tooltips": {
+      "expandList": "Развернуть список",
+      "collapseList": "Свернуть список"
     }
   },
   "login": {

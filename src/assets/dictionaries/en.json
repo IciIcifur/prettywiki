@@ -44,6 +44,10 @@
   "wiki": {
     "toasts": {
       "getArticleError": "Failed to load article"
+    },
+    "tooltips": {
+      "expandList": "Expand list",
+      "collapseList": "Collapse list"
     }
   },
   "login": {
