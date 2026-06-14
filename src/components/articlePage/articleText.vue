@@ -51,6 +51,7 @@
   function purifyText(text: string) {
     text = text.replace(SUP_REGEX, '');
     text = text.replace(IMG_REGEX, '');
+    text = text.replace(/↑/g, '');
     text = text.replace(JUNK_ATTRS_REGEX, '');
 
     let prev = text;
@@ -73,10 +74,13 @@
     class="styled-links"
   >
     <template :key="i" v-for="(chunk, i) in textChunks">
-      <span v-if="chunk.type === 'text'" v-html="chunk.text" />
+      <span
+        v-if="chunk.type === 'text' && chunk.text.trim().length"
+        v-html="chunk.text"
+      />
       <ArticleLink
         :key="i"
-        v-if="chunk.type === 'link'"
+        v-if="chunk.type === 'link' && chunk.text.trim().length"
         :href="chunk.href"
         :text="chunk.text"
         :title="chunk.title"

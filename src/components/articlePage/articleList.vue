@@ -15,18 +15,13 @@
   const expanded = ref(!canBeCollapsed.value);
 
   const visibleChildren = computed(() =>
-    expanded.value
-      ? props.item.children
-      : props.item.children
-          .map((child, i) => (indexVisible(i) ? child : null))
-          .filter((child) => child !== null)
+    props.item.children
+      .map((child, originalIndex) => ({ child, originalIndex }))
+      .filter(({ originalIndex }) => indexVisible(originalIndex))
   );
 
   const firstPartLastIndex = computed(() =>
     expanded.value ? visibleChildren.value.length : MAX_VISIBLE_ITEMS / 2
-  );
-  const secondPartFirstIndex = computed(() =>
-    expanded.value ? 0 : visibleChildren.value.length - MAX_VISIBLE_ITEMS / 2
   );
 
   const indexVisible = (index: number) => {
@@ -39,13 +34,17 @@
 </script>
 
 <template>
-  <component
-    :is="item.listType === 'ordered' ? 'ol' : 'ul'"
-    class="space-y-1.5 pl-6"
+  <TransitionGroup
+    :tag="item.listType === 'ordered' ? 'ol' : 'ul'"
+    class="relative space-y-1.5 pl-6"
+    name="list-item"
   >
     <li
-      :key="i"
-      v-for="(child, i) in visibleChildren.slice(0, firstPartLastIndex)"
+      :key="`i-${originalIndex}`"
+      v-for="{ child, originalIndex } in visibleChildren.slice(
+        0,
+        firstPartLastIndex
+      )"
       class="flex flex-col"
     >
       <span class="flex items-start gap-2">
@@ -58,8 +57,9 @@
           v-else
           class="size-6 shrink-0 text-center opacity-60 dark:opacity-40"
         >
-          {{ i + 1 }}.
+          {{ originalIndex + 1 }}.
         </span>
+
         <ArticleText
           no-styling
           :item="{ id: '', type: 'text', text: child.title }"
@@ -103,38 +103,65 @@
 
     <template v-if="!expanded">
       <li
-        :key="i"
-        v-for="(child, i) in visibleChildren.slice(
-          secondPartFirstIndex,
-          visibleChildren.length
+        :key="`i-${originalIndex}`"
+        v-for="{ child, originalIndex } in visibleChildren.slice(
+          firstPartLastIndex
         )"
         class="flex flex-col"
       >
         <span class="flex items-start gap-2">
-          <UIcon
-            v-if="item.listType === 'bullet'"
-            class="size-6 shrink-0 opacity-40"
-            name="i-lucide-dot"
-          />
-          <span
-            v-else
-            class="size-6 shrink-0 text-center opacity-60 dark:opacity-40"
-          >
-            {{ item.children.length - MAX_VISIBLE_ITEMS / 2 + i + 1 }}.
+          <span class="flex items-start gap-2">
+            <UIcon
+              v-if="item.listType === 'bullet'"
+              class="size-6 shrink-0 opacity-40"
+              name="i-lucide-dot"
+            />
+            <span
+              v-else
+              class="size-6 shrink-0 text-center opacity-60 dark:opacity-40"
+            >
+              {{
+                item.children.length -
+                MAX_VISIBLE_ITEMS / 2 +
+                originalIndex +
+                1
+              }}.
+            </span>
+            <ArticleText
+              no-styling
+              :item="{ id: '', type: 'text', text: child.title }"
+            />
           </span>
-          <ArticleText
-            no-styling
-            :item="{ id: '', type: 'text', text: child.title }"
-          />
-        </span>
-        <span v-if="child.children.length">
-          <ArticleList
-            :key="j"
-            v-for="(innerList, j) in child.children"
-            :item="innerList"
-          />
+          <span v-if="child.children.length">
+            <ArticleList
+              :key="j"
+              v-for="(innerList, j) in child.children"
+              :item="innerList"
+            />
+          </span>
         </span>
       </li>
     </template>
-  </component>
+  </TransitionGroup>
 </template>
+
+<style scoped>
+  .list-item-enter-active,
+  .list-item-leave-active {
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+  .list-item-enter-from,
+  .list-item-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  .list-item-leave-active {
+    position: absolute;
+    width: 100%;
+  }
+  .list-item-move {
+    transition: transform 0.25s ease;
+  }
+</style>
