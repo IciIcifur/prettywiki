@@ -72,11 +72,11 @@ h4 {
 }
 
 .styled-links a {
-    font-weight: 500;
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.25s;
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.25s;
 }
 .styled-links a:hover {
-    color: var(--ui-primary);
+  color: var(--ui-primary);
 }
