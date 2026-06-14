@@ -33,6 +33,15 @@ function parseElement(el: Element): ArticleContentItem | null {
 
   if (
     el.classList.contains('mw-empty-elt') ||
+    Array.from(el.classList).some((c) => c.startsWith('ts-')) ||
+    tagName === 'meta' ||
+    tagName === 'style'
+  ) {
+    return null;
+  }
+
+  if (
+    el.classList.contains('mw-empty-elt') ||
     tagName === 'meta' ||
     tagName === 'style'
   ) {

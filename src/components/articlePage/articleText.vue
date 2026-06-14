@@ -10,6 +10,7 @@
   const SUP_REGEX = /<sup[^>]*>.*?<\/sup>/gs;
   const SPAN_REGEX = /<span(?![^>]*\bstyle\b)[^>]*>(.*?)<\/span>/gs;
   const LINKS_REGEX = /<a\s([^>]*)>(.*?)<\/a>/gs;
+  const IMG_REGEX = /<img[^>]*\/?>/g;
 
   const props = defineProps<{
     item: TextItem;
@@ -49,6 +50,7 @@
 
   function purifyText(text: string) {
     text = text.replace(SUP_REGEX, '');
+    text = text.replace(IMG_REGEX, '');
     text = text.replace(JUNK_ATTRS_REGEX, '');
 
     let prev = text;
@@ -66,7 +68,8 @@
 
 <template>
   <p
-    :class="`${noStyling ? '' : 'pb-1 indent-6'} ${props.class}`"
+    v-if="textChunks.length && textChunks[0].text.length"
+    :class="`${noStyling ? '' : 'pb-1 indent-6'} ${props.class || ''}`"
     class="styled-links"
   >
     <template :key="i" v-for="(chunk, i) in textChunks">
