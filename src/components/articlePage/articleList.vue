@@ -103,42 +103,35 @@
 
     <template v-if="!expanded">
       <li
-        :key="`i-${originalIndex}`"
         v-for="{ child, originalIndex } in visibleChildren.slice(
           firstPartLastIndex
         )"
+        :key="`i-${originalIndex}`"
         class="flex flex-col"
       >
         <span class="flex items-start gap-2">
-          <span class="flex items-start gap-2">
-            <UIcon
-              v-if="item.listType === 'bullet'"
-              class="size-6 shrink-0 opacity-40"
-              name="i-lucide-dot"
-            />
-            <span
-              v-else
-              class="size-6 shrink-0 text-center opacity-60 dark:opacity-40"
-            >
-              {{
-                item.children.length -
-                MAX_VISIBLE_ITEMS / 2 +
-                originalIndex +
-                1
-              }}.
-            </span>
-            <ArticleText
-              no-styling
-              :item="{ id: '', type: 'text', text: child.title }"
-            />
+          <UIcon
+            v-if="item.listType === 'bullet'"
+            class="size-6 shrink-0 opacity-40"
+            name="i-lucide-dot"
+          />
+          <span
+            v-else
+            class="size-6 shrink-0 text-center opacity-60 dark:opacity-40"
+          >
+            {{ originalIndex + 1 }}.
           </span>
-          <span v-if="child.children.length">
-            <ArticleList
-              :key="j"
-              v-for="(innerList, j) in child.children"
-              :item="innerList"
-            />
-          </span>
+          <ArticleText
+            no-styling
+            :item="{ id: '', type: 'text', text: child.title }"
+          />
+        </span>
+        <span v-if="child.children.length">
+          <ArticleList
+            :key="j"
+            v-for="(innerList, j) in child.children"
+            :item="innerList"
+          />
         </span>
       </li>
     </template>
