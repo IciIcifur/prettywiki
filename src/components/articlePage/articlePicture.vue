@@ -50,10 +50,10 @@
 
 <template>
   <UCard
+    :class="floatStyle"
     :ui="{
       body: 'flex flex-col gap-2 justify-center p-3',
     }"
-    :class="floatStyle"
     class="my-3 w-full items-center sm:max-w-sm md:max-w-md"
     variant="soft"
   >

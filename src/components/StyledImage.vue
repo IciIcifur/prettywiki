@@ -16,8 +16,8 @@
     class="group relative flex items-center justify-center overflow-hidden rounded-xl border border-neutral-50/5 bg-neutral-200 dark:border-white/5 dark:bg-neutral-800"
   >
     <img
-      v-if="!error"
       @error="error = true"
+      v-if="!error"
       :alt="alt"
       :src="src"
       class="h-auto max-h-[560px] w-full transition-transform duration-300 group-hover:scale-105"
