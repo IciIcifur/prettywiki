@@ -26,11 +26,7 @@
 </script>
 
 <template>
-  <component
-    :is="`h${item.level}`"
-    :class="style"
-    class="text-default-900 w-full flex-col pl-6"
-  >
+  <component :is="`h${item.level}`" :class="style" class="w-full flex-col pl-6">
     <USeparator v-if="item.level <= 2" class="pb-4" />
     <span v-html="cleanText" />
   </component>

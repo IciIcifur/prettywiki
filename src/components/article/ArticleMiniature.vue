@@ -28,7 +28,7 @@
         <div class="flex w-full flex-col gap-0">
           <ULink
             :to="getPageUrl(article.title)"
-            class="text-default hover:text-primary transition-colors"
+            class="text-neutral hover:text-primary transition-colors"
           >
             <h4 class="line-clamp-1">
               {{ article.title }}

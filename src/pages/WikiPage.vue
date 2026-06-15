@@ -40,15 +40,13 @@
       {{ normalizedTitle }}
     </h1>
 
-    <div class="flex w-full flex-col gap-1">
-      <div
+    <div class="space-1 w-full">
+      <ArticleItem
         :key="item.id"
         v-for="item in activePage?.contents"
         :id="item.id"
-        class="flex h-fit w-full flex-col justify-center gap-0 overflow-x-clip"
-      >
-        <ArticleItem :item="item" />
-      </div>
+        :item="item"
+      />
     </div>
   </div>
 </template>
