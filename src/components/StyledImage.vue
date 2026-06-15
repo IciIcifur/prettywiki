@@ -13,17 +13,20 @@
 <template>
   <div
     :class="!fullWidth && 'sm:w-96'"
-    class="flex min-h-64 items-center justify-center overflow-clip rounded-xl border border-neutral-50/5 bg-neutral-200 text-neutral-300 dark:border-white/5 dark:bg-neutral-800 dark:text-neutral-700"
+    class="group relative flex items-center justify-center overflow-hidden rounded-xl border border-neutral-50/5 bg-neutral-200 dark:border-white/5 dark:bg-neutral-800"
   >
     <img
-      @error="error = true"
       v-if="!error"
+      @error="error = true"
       :alt="alt"
       :src="src"
-      class="h-full max-h-[560px] w-full max-w-3xl transition-transform duration-300 hover:scale-105"
+      class="h-auto max-h-[560px] w-full transition-transform duration-300 group-hover:scale-105"
       loading="lazy"
     />
-    <div v-else class="flex h-full w-full items-center justify-center">
+    <div
+      v-else
+      class="flex min-h-[16rem] w-full items-center justify-center text-neutral-300 dark:text-neutral-700"
+    >
       <UIcon class="size-32" name="i-lucide-mountain-snow" />
     </div>
   </div>

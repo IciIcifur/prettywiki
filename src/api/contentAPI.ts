@@ -13,6 +13,7 @@ import {
   GetPageHTML,
   GetPageMedia,
   GetRandomPageSummary,
+  ImageMetadataQueryRequest,
   SearchRequest,
 } from './api.ts';
 import parseTemplate from '../utils/parseTemplate.ts';
@@ -138,7 +139,7 @@ export async function GetRandomPageTitle(
 
 export async function GetPageByTitle(title: string, locale: string) {
   try {
-    return await GetPageHTML(locale, title);
+    return GetPageHTML(locale, title);
   } catch (e: any) {
     console.error(`Failed to load page html: ${e}`);
     return null;
@@ -146,7 +147,16 @@ export async function GetPageByTitle(title: string, locale: string) {
 }
 export async function GetPageMediaByTitle(title: string, locale: string) {
   try {
-    return await GetPageMedia(locale, title);
+    return GetPageMedia(locale, title);
+  } catch (e: any) {
+    console.error(`Failed to load page media: ${e}`);
+    return null;
+  }
+}
+
+export function GetMediaByTitle(title: string, locale: string) {
+  try {
+    return ImageMetadataQueryRequest(locale, title);
   } catch (e: any) {
     console.error(`Failed to load page media: ${e}`);
     return null;

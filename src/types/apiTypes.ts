@@ -154,6 +154,7 @@ export interface ImageInfoResultItem {
   descriptionshorturl: string;
   descriptionurl: string;
   extmetadata: Partial<ExtMetadataFields>;
+  thumburl?: string;
   metadata: { name: keyof MetadataFields; value: string | number }[];
   url: string;
 }

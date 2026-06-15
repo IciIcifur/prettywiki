@@ -126,6 +126,6 @@ export function processImageMetadataQueryResult(data: ImageInfoResultItem): {
   console.log(data.url);
   console.log(data.extmetadata);
   console.log(data.metadata);
-
-  return { url: data.url, metadata: { title: '' } };
+  const imageUrl = data.thumburl || data.url;
+  return { url: imageUrl, metadata: { title: '' } };
 }

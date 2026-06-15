@@ -122,6 +122,7 @@ export async function ImageMetadataQueryRequest(locale: string, title: string) {
           titles: title,
           prop: 'imageinfo',
           iiprop: 'url|metadata|extmetadata',
+          iiurlwidth: 800,
           format: 'json',
           origin: '*',
         },
