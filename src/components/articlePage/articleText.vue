@@ -1,16 +1,13 @@
 <script setup lang="ts">
   import type { TextItem } from '../../types/types.ts';
   import { computed } from 'vue';
+  import cleanHTMLText from '../../utils/cleanHTMLText.ts';
 
   type TextChunk =
     | { type: 'text'; text: string }
     | { type: 'link'; href: string; title: string; text: string };
 
-  const JUNK_ATTRS_REGEX = /\s(?:id|about|typeof|rel|data-[\w-]+)="[^"]*"/g;
-  const SUP_REGEX = /<sup[^>]*>.*?<\/sup>/gs;
-  const SPAN_REGEX = /<span(?![^>]*\bstyle\b)[^>]*>(.*?)<\/span>/gs;
   const LINKS_REGEX = /<a\s([^>]*)>(.*?)<\/a>/gs;
-  const IMG_REGEX = /<img[^>]*\/?>/g;
 
   const props = defineProps<{
     item: TextItem;
@@ -48,23 +45,9 @@
     return chunks;
   }
 
-  function purifyText(text: string) {
-    text = text.replace(SUP_REGEX, '');
-    text = text.replace(IMG_REGEX, '');
-    text = text.replace(/↑/g, '');
-    text = text.replace(JUNK_ATTRS_REGEX, '');
-
-    let prev = text;
-    let result = text.replace(SPAN_REGEX, '$1');
-    while (result !== prev) {
-      prev = result;
-      result = result.replace(SPAN_REGEX, '$1');
-    }
-    return result;
-  }
-
-  const cleanText = computed(() => purifyText(props.item.text));
-  const textChunks = computed(() => splitByLinks(cleanText.value));
+  const textChunks = computed(() =>
+    splitByLinks(cleanHTMLText(props.item.text))
+  );
 </script>
 
 <template>

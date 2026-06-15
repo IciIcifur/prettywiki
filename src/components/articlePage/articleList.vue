@@ -2,6 +2,7 @@
   import type { ListItem } from '../../types/types.ts';
   import { computed, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
+  import cleanHTMLText from '../../utils/cleanHTMLText.ts';
 
   const { t } = useI18n();
 
@@ -9,13 +10,19 @@
   const MIN_HIDDEN_ITEMS = 5;
   const props = defineProps<{ item: ListItem }>();
 
+  const notEmptyChildren = computed(() =>
+    props.item?.children.filter(
+      (child) => !!cleanHTMLText(child.title).trim().length
+    )
+  );
+
   const canBeCollapsed = computed(
-    () => props.item.children.length - MAX_VISIBLE_ITEMS >= MIN_HIDDEN_ITEMS
+    () => notEmptyChildren.value.length - MAX_VISIBLE_ITEMS >= MIN_HIDDEN_ITEMS
   );
   const expanded = ref(!canBeCollapsed.value);
 
   const visibleChildren = computed(() =>
-    props.item.children
+    notEmptyChildren.value
       .map((child, originalIndex) => ({ child, originalIndex }))
       .filter(({ originalIndex }) => indexVisible(originalIndex))
   );
@@ -28,7 +35,7 @@
     if (expanded.value) return true;
     return !(
       index > MAX_VISIBLE_ITEMS / 2 - 1 &&
-      index < props.item.children.length - MAX_VISIBLE_ITEMS / 2 - 1
+      index < notEmptyChildren.value.length - MAX_VISIBLE_ITEMS / 2 - 1
     );
   };
 </script>
@@ -103,10 +110,10 @@
 
     <template v-if="!expanded">
       <li
+        :key="`i-${originalIndex}`"
         v-for="{ child, originalIndex } in visibleChildren.slice(
           firstPartLastIndex
         )"
-        :key="`i-${originalIndex}`"
         class="flex flex-col"
       >
         <span class="flex items-start gap-2">
