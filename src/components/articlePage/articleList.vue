@@ -41,77 +41,16 @@
 </script>
 
 <template>
-  <TransitionGroup
-    :tag="item.listType === 'ordered' ? 'ol' : 'ul'"
-    class="relative space-y-1.5 pl-6"
-    name="list-item"
-  >
-    <li
-      :key="`i-${originalIndex}`"
-      v-for="{ child, originalIndex } in visibleChildren.slice(
-        0,
-        firstPartLastIndex
-      )"
-      class="flex flex-col"
+  <div class="flex">
+    <TransitionGroup
+      :tag="item.listType === 'ordered' ? 'ol' : 'ul'"
+      class="relative space-y-1.5 pl-6"
+      name="list-item"
     >
-      <span class="flex items-start gap-2">
-        <UIcon
-          v-if="item.listType === 'bullet'"
-          class="size-6 shrink-0 opacity-40"
-          name="i-lucide-dot"
-        />
-        <span
-          v-else
-          class="size-6 shrink-0 text-center opacity-60 dark:opacity-40"
-        >
-          {{ originalIndex + 1 }}.
-        </span>
-
-        <ArticleText
-          no-styling
-          :item="{ id: '', type: 'text', text: child.title }"
-        />
-      </span>
-      <span v-if="child.children.length">
-        <ArticleList
-          :key="j"
-          v-for="(innerList, j) in child.children"
-          :item="innerList"
-        />
-      </span>
-    </li>
-
-    <li v-if="canBeCollapsed" class="flex w-full justify-center">
-      <USeparator>
-        <UTooltip
-          :text="
-            t(
-              expanded
-                ? 'wiki.tooltips.collapseList'
-                : 'wiki.tooltips.expandList'
-            )
-          "
-        >
-          <UButton
-            @click.stop="expanded = !expanded"
-            :class="expanded ? '' : 'rotate-90'"
-            :icon="
-              expanded
-                ? 'i-lucide-chevrons-up'
-                : 'i-lucide-chevrons-left-right-ellipsis'
-            "
-            class="rounded-full"
-            size="xl"
-            variant="ghost"
-          />
-        </UTooltip>
-      </USeparator>
-    </li>
-
-    <template v-if="!expanded">
       <li
         :key="`i-${originalIndex}`"
         v-for="{ child, originalIndex } in visibleChildren.slice(
+          0,
           firstPartLastIndex
         )"
         class="flex flex-col"
@@ -128,6 +67,7 @@
           >
             {{ originalIndex + 1 }}.
           </span>
+
           <ArticleText
             no-styling
             :item="{ id: '', type: 'text', text: child.title }"
@@ -141,8 +81,70 @@
           />
         </span>
       </li>
-    </template>
-  </TransitionGroup>
+
+      <li v-if="canBeCollapsed" class="flex w-full justify-center">
+        <USeparator>
+          <UTooltip
+            :text="
+              t(
+                expanded
+                  ? 'wiki.tooltips.collapseList'
+                  : 'wiki.tooltips.expandList'
+              )
+            "
+          >
+            <UButton
+              @click.stop="expanded = !expanded"
+              :class="expanded ? '' : 'rotate-90'"
+              :icon="
+                expanded
+                  ? 'i-lucide-chevrons-up'
+                  : 'i-lucide-chevrons-left-right-ellipsis'
+              "
+              class="rounded-full"
+              size="xl"
+              variant="ghost"
+            />
+          </UTooltip>
+        </USeparator>
+      </li>
+
+      <template v-if="!expanded">
+        <li
+          :key="`i-${originalIndex}`"
+          v-for="{ child, originalIndex } in visibleChildren.slice(
+            firstPartLastIndex
+          )"
+          class="flex flex-col"
+        >
+          <span class="flex items-start gap-2">
+            <UIcon
+              v-if="item.listType === 'bullet'"
+              class="size-6 shrink-0 opacity-40"
+              name="i-lucide-dot"
+            />
+            <span
+              v-else
+              class="size-6 shrink-0 text-center opacity-60 dark:opacity-40"
+            >
+              {{ originalIndex + 1 }}.
+            </span>
+            <ArticleText
+              no-styling
+              :item="{ id: '', type: 'text', text: child.title }"
+            />
+          </span>
+          <span v-if="child.children.length">
+            <ArticleList
+              :key="j"
+              v-for="(innerList, j) in child.children"
+              :item="innerList"
+            />
+          </span>
+        </li>
+      </template>
+    </TransitionGroup>
+  </div>
 </template>
 
 <style scoped>

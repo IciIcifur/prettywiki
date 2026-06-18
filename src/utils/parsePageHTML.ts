@@ -1,9 +1,13 @@
 import type {
+  AlertItem,
   ArticleContentItem,
   InfoBoxItem,
   ListItem,
   TableItem,
 } from '../types/types.ts';
+import batchPageBlocks from './batchPageBlocks.ts';
+
+const AMBOX_REGEX = /\b(?:ambox|tmbox|cmbox|imbox|ombox|fmbox)\b/;
 
 const generateId = () => crypto.randomUUID?.();
 
@@ -17,8 +21,11 @@ function parseChildren(el: Element): ArticleContentItem[] {
   const result: ArticleContentItem[] = [];
   for (const child of Array.from(el.children)) {
     const tag = child.tagName.toLowerCase();
-    // div-обёртки разворачиваем рекурсивно
-    if (tag === 'div' && !child.classList.contains('infobox')) {
+    if (
+      tag === 'div' &&
+      !child.classList.contains('infobox') &&
+      !AMBOX_REGEX.test(child.className)
+    ) {
       result.push(...parseChildren(child));
     } else {
       const parsed = parseElement(child);
@@ -51,6 +58,10 @@ function parseElement(el: Element): ArticleContentItem | null {
   // Инфобокс — до общего table-чека
   if (el.classList.contains('infobox')) {
     return parseInfoBox(el);
+  }
+
+  if (AMBOX_REGEX.test(el.className)) {
+    return parseAmbox(el);
   }
 
   if (tagName === 'table') {
@@ -214,6 +225,23 @@ function parseInfoBox(el: Element): InfoBoxItem {
   return { id: generateId(), type: 'infobox', title: boxTitle, rows };
 }
 
+function parseAmbox(el: Element): AlertItem {
+  const textRoot = el.querySelector('.mbox-text, .mbox-text-div') ?? el;
+  const clone = textRoot.cloneNode(true) as Element;
+
+  const boldEl = clone.querySelector('b');
+  const title = boldEl?.textContent?.trim();
+  boldEl?.remove();
+
+  return {
+    id: generateId(),
+    type: 'alert',
+    classes: el.className,
+    title,
+    text: removeStyles(clone),
+  };
+}
+
 export default function parsePageHTML(html: string): ArticleContentItem[] {
   const domParser = new DOMParser();
   const document = domParser.parseFromString(html, 'text/html');
@@ -224,6 +252,8 @@ export default function parsePageHTML(html: string): ArticleContentItem[] {
     uiBlocks.push(...parseChildren(section));
   }
 
-  console.log(uiBlocks);
-  return uiBlocks;
+  const batched = batchPageBlocks(uiBlocks);
+  console.log(uiBlocks.length);
+  console.log(batched);
+  return batched;
 }

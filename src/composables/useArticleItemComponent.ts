@@ -6,6 +6,8 @@ import ArticleTable from '../components/articlePage/articleTable.vue';
 import ArticleInfobox from '../components/articlePage/articleInfobox.vue';
 import ArticleList from '../components/articlePage/articleList.vue';
 import ArticlePicture from '../components/articlePage/articlePicture.vue';
+import ArticleAlert from '../components/articlePage/articleAlert.vue';
+import ArticleGallery from '../components/articlePage/articleGallery.vue';
 
 const componentMap: Record<ArticleContentItem['type'], Component> = {
   heading: ArticleHeading,
@@ -14,6 +16,8 @@ const componentMap: Record<ArticleContentItem['type'], Component> = {
   infobox: ArticleInfobox,
   list: ArticleList,
   picture: ArticlePicture,
+  gallery: ArticleGallery,
+  alert: ArticleAlert,
 };
 
 export default function useArticleItemComponent(item: ArticleContentItem) {

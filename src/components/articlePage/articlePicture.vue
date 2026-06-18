@@ -4,7 +4,11 @@
   import { computed, onMounted, ref } from 'vue';
   import { GetMediaByTitle } from '../../api/contentAPI.ts';
 
-  const props = defineProps<{ item: PictureItem }>();
+  const props = defineProps<{
+    item: PictureItem;
+    noFloat?: boolean;
+    className?: string;
+  }>();
 
   const betterUrl = ref<string | null>(null);
 
@@ -40,8 +44,7 @@
   const floatStyle = ref();
 
   onMounted(async () => {
-    floatStyle.value =
-      Math.random() > 0.5 ? 'sm:float-left mr-6' : 'sm:float-right ml-6';
+    floatStyle.value = props.noFloat ? '' : 'sm:float-right ml-6';
     if (!imageTitle.value) return;
     const result = await GetMediaByTitle(imageTitle.value, 'en');
     if (result) betterUrl.value = result.url;
@@ -50,11 +53,11 @@
 
 <template>
   <UCard
-    :class="floatStyle"
+    :class="`${floatStyle} ${className}`"
     :ui="{
       body: 'flex flex-col gap-2 justify-center p-3',
     }"
-    class="my-3 w-full items-center sm:max-w-sm md:max-w-md"
+    class="mb-3 w-full items-center sm:max-w-sm md:max-w-md"
     variant="soft"
   >
     <StyledImage

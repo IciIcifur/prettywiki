@@ -81,10 +81,24 @@ export interface TableItem extends BaseItem {
   rows: Record<string, any>[];
 }
 
+export interface AlertItem extends BaseItem {
+  type: 'alert';
+  classes: string;
+  title?: string;
+  text?: string;
+}
+
+export interface GalleryItem extends BaseItem {
+  type: 'gallery';
+  children: PictureItem[];
+}
+
 export type ArticleContentItem =
   | HeadingItem
   | ListItem
   | PictureItem
+  | GalleryItem
   | TextItem
   | InfoBoxItem
-  | TableItem;
+  | TableItem
+  | AlertItem;
