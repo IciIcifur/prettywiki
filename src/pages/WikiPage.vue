@@ -35,12 +35,12 @@
 </script>
 
 <template>
-  <div class="flex w-full flex-col gap-8">
+  <div class="flex w-full flex-col gap-8 sm:px-6 md:px-16">
     <h1 class="w-full pl-6 text-neutral-800 italic dark:text-neutral-200">
       {{ normalizedTitle }}
     </h1>
 
-    <div class="space-1 w-full">
+    <div class="space-1 w-full overflow-x-clip">
       <ArticleItem
         :key="item.id"
         v-for="item in activePage?.contents"

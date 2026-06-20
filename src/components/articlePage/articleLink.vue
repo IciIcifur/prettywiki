@@ -23,7 +23,9 @@
     :disabled="!title"
     :text="title"
   >
-    <ULink :to="href"><span v-html="text" class="text-nowrap" /></ULink>
+    <ULink :to="href">
+      <span v-html="text" class="truncate text-nowrap" />
+    </ULink>
   </UTooltip>
   <span v-else v-html="text" />
 </template>

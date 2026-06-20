@@ -44,7 +44,9 @@
   const floatStyle = ref();
 
   onMounted(async () => {
-    floatStyle.value = props.noFloat ? '' : 'sm:float-right ml-6';
+    floatStyle.value = props.noFloat
+      ? ''
+      : 'sm:float-right sm:ml-6 clear-right';
     if (!imageTitle.value) return;
     const result = await GetMediaByTitle(imageTitle.value, 'en');
     if (result) betterUrl.value = result.url;

@@ -54,7 +54,7 @@
   <p
     v-if="textChunks.length && textChunks[0].text.length"
     :class="`${noStyling ? '' : 'pb-1 indent-6'} ${props.class || ''}`"
-    class="styled-links"
+    class="styled-links text-justify"
   >
     <template :key="i" v-for="(chunk, i) in textChunks">
       <span

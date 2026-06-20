@@ -21,8 +21,11 @@ function parseChildren(el: Element): ArticleContentItem[] {
   const result: ArticleContentItem[] = [];
   for (const child of Array.from(el.children)) {
     const tag = child.tagName.toLowerCase();
+
+    const isContainer = tag === 'div' || tag === 'section';
+
     if (
-      tag === 'div' &&
+      isContainer &&
       !child.classList.contains('infobox') &&
       !AMBOX_REGEX.test(child.className)
     ) {
@@ -92,11 +95,8 @@ function parseElement(el: Element): ArticleContentItem | null {
     return parseListElement(el);
   }
 
-  if (
-    tagName === 'figure' ||
-    (tagName !== 'table' && el.querySelector('img'))
-  ) {
-    const img = el.querySelector('img');
+  if (tagName === 'figure' || tagName === 'img') {
+    const img = tagName === 'img' ? el : el.querySelector('img');
     if (img) {
       const src = img.getAttribute('src') || '';
       const figcaption = el.querySelector('figcaption');
@@ -245,14 +245,11 @@ function parseAmbox(el: Element): AlertItem {
 export default function parsePageHTML(html: string): ArticleContentItem[] {
   const domParser = new DOMParser();
   const document = domParser.parseFromString(html, 'text/html');
-  const sections = document.getElementsByTagName('section');
 
-  const uiBlocks: ArticleContentItem[] = [];
-  for (const section of Array.from(sections)) {
-    uiBlocks.push(...parseChildren(section));
-  }
+  const uiBlocks = parseChildren(document.body);
 
   const batched = batchPageBlocks(uiBlocks);
+
   console.log(uiBlocks.length);
   console.log(batched);
   return batched;
