@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { ArticleContentItem, InfoBoxItem } from '../../types/types.ts';
-  import { computed, onMounted, watch } from 'vue';
+  import { computed, onMounted } from 'vue';
 
   type InfoBoxChunk =
     | { type: 'label'; value: string }
@@ -13,12 +13,12 @@
     {
       accessorKey: 'label',
       header: 'Label',
-      meta: { class: { td: 'w-fit', th: 'w-fit' } },
+      meta: { class: { td: 'w-1/4', th: 'w-1/4' } },
     },
     {
       accessorKey: 'value',
       header: 'Value',
-      meta: { class: { td: 'w-full', th: 'w-full' } },
+      meta: { class: { td: 'w-3/4', th: 'w-3/4' } },
     },
   ];
 
@@ -45,7 +45,7 @@
     return chunks;
   });
 
-  onMounted(() => console.log(infoBoxChunks.value));
+  onMounted(() => console.log(props.item, infoBoxChunks.value));
 </script>
 
 <template>
@@ -53,11 +53,13 @@
     :ui="{
       body: 'flex flex-col gap-2 justify-center p-3',
     }"
-    class="right-clear mb-3 w-full items-center lg:float-right lg:ml-6 lg:w-fit"
+    class="right-clear mb-3 w-full items-center lg:float-right lg:ml-6 lg:w-fit lg:max-w-2/5"
     variant="soft"
   >
     <template #header v-if="item.title">
-      <h4 class="w-full text-center">{{ item.title }}</h4>
+      <h4 class="flex w-full justify-center py-0.5">
+        <ArticleText :item="{ type: 'text', id: '', text: item.title }" />
+      </h4>
     </template>
 
     <template :key="i" v-for="(chunk, i) in infoBoxChunks">
@@ -68,14 +70,17 @@
         :ui="{ thead: 'hidden', td: 'align-top' }"
       >
         <template #label-cell="{ row }">
-          <p v-if="row.original.label" class="h-full align-text-top font-bold">
-            {{ row.original.label }}
-          </p>
+          <ArticleText
+            v-if="row.original.label"
+            class="h-full align-text-top font-semibold text-wrap"
+            no-styling
+            :item="{ type: 'text', id: '', text: row.original.label }"
+          />
         </template>
         <template #value-cell="{ row }">
           <div
             v-if="row.original.value"
-            class="flex w-full flex-col items-start gap-2"
+            class="flex flex-col items-start gap-2"
           >
             <ArticleItem
               no-styling
@@ -89,13 +94,15 @@
         </template>
       </UTable>
 
-      <p v-if="chunk.type === 'label'" class="w-full text-center font-bold">
-        {{ chunk.value }}
-      </p>
-
+      <ArticleText
+        v-if="chunk.type === 'label'"
+        class="light:bg-neutral-100 flex w-full justify-center rounded-md py-2 text-center font-semibold dark:bg-neutral-800 dark:text-neutral-100"
+        no-styling
+        :item="{ type: 'text', id: '', text: chunk.value }"
+      />
       <div
         v-if="chunk.type === 'text'"
-        class="flex w-full flex-col items-center gap-2"
+        class="flex flex-col items-center gap-2"
       >
         <ArticleItem
           no-styling

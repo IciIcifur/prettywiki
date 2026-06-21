@@ -37,34 +37,25 @@ function extractCaption(
   fileEl: Element,
   container: Element
 ): string | undefined {
-  // 1. <figcaption> — стандарт для figure-обёрток (mw:File/Thumb)
   const figcaption = container.querySelector('figcaption');
   if (figcaption) return removeStyles(figcaption);
 
-  // 2. Видимый .media-caption — встречается в infobox-вариантах без figure
   const mediaCaption = container.querySelector('.media-caption');
   if (mediaCaption?.textContent?.trim()) return removeStyles(mediaCaption);
 
-  // 3. JSON в data-mw самого File-элемента — Parsoid хранит подпись здесь
-  //    даже когда видимого текста рядом нет (например, mw:File/Frameless)
   const dataMw = fileEl.getAttribute('data-mw');
   if (dataMw) {
     try {
       const caption = JSON.parse(dataMw)?.caption;
       if (typeof caption === 'string' && caption.trim()) return caption.trim();
-    } catch {
-      /* битый JSON — игнорируем */
-    }
+    } catch {}
   }
 
   return undefined;
 }
 
 /**
- * Достаёт картинку из контейнера, который УЖЕ доверенно определён как картинка
- * (тег figure/img, typeof на самом элементе, или явный класс типа infobox-image).
- * Поиск [typeof] внутри тут безопасен — неопределённости в типе контента нет,
- * её сняли на уровне вызывающего кода.
+ * Достаёт картинку из контейнера, который определён как картинка
  */
 function extractPicture(container: Element): PictureItem | null {
   const tagName = container.tagName.toLowerCase();
@@ -87,8 +78,6 @@ function extractPicture(container: Element): PictureItem | null {
   };
 }
 
-// ---- Матчеры: каждый знает только свой тип контента ----
-
 type Matcher = {
   test: (el: Element) => boolean;
   parse: (el: Element) => ArticleContentItem | null;
@@ -108,8 +97,6 @@ const matchers: Matcher[] = [
   },
   { test: (el) => el.tagName.toLowerCase() === 'p', parse: parseParagraph },
   {
-    // Доверенный сигнал "это картинка": тег figure/img, либо typeof
-    // объявлен прямо на этом элементе (не на потомке!)
     test: (el) =>
       ['figure', 'img'].includes(el.tagName.toLowerCase()) || isFileElement(el),
     parse: extractPicture,
@@ -226,21 +213,88 @@ function parseInfoBox(el: Element): InfoBoxItem {
   const rows: InfoBoxItem['rows'] = [];
   let boxTitle: string | undefined;
 
-  el.querySelectorAll('tr').forEach((tr) => {
-    const th = tr.querySelector('th');
-    const td = tr.querySelector('td');
+  function findTaxonomyContainer(el: Element): Element | null {
+    return el.querySelector(':has(> .ts-Taxonomy-rang-row)');
+  }
 
-    if (th && !td) {
-      const text = th.textContent?.trim();
-      if (!boxTitle && text) boxTitle = text;
+  function parseTaxonomyRows(container: Element): InfoBoxItem['rows'] {
+    return Array.from(
+      container.querySelectorAll(':scope > .ts-Taxonomy-rang-row')
+    ).map((row) => {
+      const labelEl = row.querySelector('.ts-Taxonomy-rang-label');
+      const nameEl = row.querySelector('.ts-Taxonomy-rang-name');
+
+      const label = labelEl?.textContent?.trim().replace(/:$/, '') || null;
+      const value = nameEl?.textContent?.trim()
+        ? [
+            {
+              id: generateId(),
+              type: 'text' as const,
+              text: removeStyles(nameEl),
+            },
+          ]
+        : [];
+
+      return { label, value };
+    });
+  }
+
+  el.querySelectorAll('tr').forEach((tr) => {
+    const ths = Array.from(tr.querySelectorAll('th'));
+    const tds = Array.from(tr.querySelectorAll('td'));
+
+    if (ths.length === 1 && tds.length === 0) {
+      const thClone = ths[0].cloneNode(true) as HTMLElement;
+
+      thClone.querySelectorAll('style, script').forEach((s) => s.remove());
+
+      thClone
+        .querySelectorAll('[class]')
+        .forEach((el) => el.removeAttribute('class'));
+      const boxTitleHtml = thClone.innerHTML.trim();
+
+      if (!boxTitleHtml) return;
+
+      if (!boxTitle) {
+        boxTitle = boxTitleHtml;
+        return;
+      }
+
+      rows.push({
+        label: boxTitleHtml,
+        value: [],
+      });
       return;
     }
 
-    if (td) {
+    if (ths.length === 1 && tds.length === 1) {
+      const taxonomyContainer = findTaxonomyContainer(tds[0]);
+      if (taxonomyContainer) {
+        rows.push(...parseTaxonomyRows(taxonomyContainer));
+        return;
+      }
       rows.push({
-        label: th ? th.textContent?.trim() || null : null,
-        value: parseInfoBoxCell(td),
+        label: ths[0].textContent?.trim() || null,
+        value: parseInfoBoxCell(tds[0]),
       });
+      return;
+    }
+
+    if (ths.length === 0 && tds.length === 2) {
+      rows.push({
+        label: tds[0].textContent?.trim().replace(/:$/, '') || null,
+        value: parseInfoBoxCell(tds[1]),
+      });
+      return;
+    }
+
+    if (ths.length === 0 && tds.length === 1) {
+      const taxonomyContainer = findTaxonomyContainer(tds[0]);
+      if (taxonomyContainer) {
+        rows.push(...parseTaxonomyRows(taxonomyContainer));
+        return;
+      }
+      rows.push({ label: null, value: parseInfoBoxCell(tds[0]) });
     }
   });
 
@@ -248,22 +302,35 @@ function parseInfoBox(el: Element): InfoBoxItem {
 }
 
 function parseInfoBoxCell(td: Element): ArticleContentItem[] {
-  // Доверенный сигнал от шаблона: эта ячейка целиком — картинка с подписью.
-  // Никаких догадок по содержимому не нужно.
-  if (td.classList.contains('infobox-image')) {
+  function isPictureOnlyCell(td: Element): boolean {
+    const fileEl = isFileElement(td)
+      ? td
+      : Array.from(td.querySelectorAll('[typeof]')).find(isFileElement);
+
+    const img = td.querySelector('img');
+    if (!img) return false;
+    if (!fileEl) return true;
+
+    const figcaption = td.querySelector('figcaption');
+    const mediaCaption = td.querySelector('.media-caption');
+
+    const hasOtherContent = Array.from(td.querySelectorAll('a')).some((a) => {
+      if (fileEl.contains(a)) return false;
+      if (figcaption?.contains(a) || mediaCaption?.contains(a)) return false;
+      return (a.textContent?.trim().length ?? 0) > 0;
+    });
+
+    return !hasOtherContent;
+  }
+
+  if (isPictureOnlyCell(td)) {
     const picture = extractPicture(td);
     return picture ? [picture] : [];
   }
 
   const cellItems: ArticleContentItem[] = [];
-
-  // Картинки тут НЕ ищем — если изображение оказалось в обычной ячейке
-  // не в составе блочного контента, это инлайновая декорация, а не контент
   if (td.querySelector('ul, ol, p')) {
-    for (const child of Array.from(td.children)) {
-      const parsed = parseElement(child);
-      if (parsed) cellItems.push(parsed);
-    }
+    cellItems.push(...parseChildren(td));
   }
 
   if (cellItems.length === 0 && td.textContent?.trim()) {
