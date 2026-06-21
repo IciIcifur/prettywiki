@@ -5,8 +5,7 @@
 </script>
 
 <template>
-  {{ item.type }}
-  {{ item.title }}
+  <p>{{ item.type }} {{ item.title }}</p>
 </template>
 
 <style scoped></style>

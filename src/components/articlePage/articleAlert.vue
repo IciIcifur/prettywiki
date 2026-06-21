@@ -11,8 +11,7 @@
 </script>
 
 <template>
-  {{ item.type }}
-  {{ item.classes }}
+  <p>{{ item.type }} {{ item.classes }}</p>
 </template>
 
 <style scoped></style>

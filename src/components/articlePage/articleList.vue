@@ -8,7 +8,7 @@
 
   const MAX_VISIBLE_ITEMS = 10;
   const MIN_HIDDEN_ITEMS = 5;
-  const props = defineProps<{ item: ListItem }>();
+  const props = defineProps<{ item: ListItem; className?: string }>();
 
   const notEmptyChildren = computed(() =>
     props.item?.children.filter(
@@ -43,6 +43,7 @@
 <template>
   <div class="flex">
     <TransitionGroup
+      :class="className || ''"
       :tag="item.listType === 'ordered' ? 'ol' : 'ul'"
       class="relative space-y-1.5 pl-6"
       name="list-item"
