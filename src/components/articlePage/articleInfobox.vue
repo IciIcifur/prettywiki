@@ -53,13 +53,15 @@
     :ui="{
       body: 'flex flex-col gap-2 justify-center p-3',
     }"
-    class="right-clear mb-3 w-full items-center lg:float-right lg:ml-6 lg:w-fit lg:max-w-2/5"
+    class="right-clear mb-3 w-full items-center lg:float-right lg:ml-6 lg:w-fit lg:max-w-1/3"
     variant="soft"
   >
     <template #header v-if="item.title">
-      <h4 class="flex w-full justify-center py-0.5">
-        <ArticleText :item="{ type: 'text', id: '', text: item.title }" />
-      </h4>
+      <ArticleHeading
+        no-styling
+        class="flex w-full justify-center py-0.5 text-center"
+        :item="{ type: 'heading', level: 4, id: '', text: item.title }"
+      />
     </template>
 
     <template :key="i" v-for="(chunk, i) in infoBoxChunks">
@@ -72,9 +74,9 @@
         <template #label-cell="{ row }">
           <ArticleText
             v-if="row.original.label"
+            :item="{ type: 'text', id: '', text: row.original.label }"
             class="h-full align-text-top font-semibold text-wrap"
             no-styling
-            :item="{ type: 'text', id: '', text: row.original.label }"
           />
         </template>
         <template #value-cell="{ row }">
@@ -96,9 +98,9 @@
 
       <ArticleText
         v-if="chunk.type === 'label'"
+        :item="{ type: 'text', id: '', text: chunk.value }"
         class="light:bg-neutral-100 flex w-full justify-center rounded-md py-2 text-center font-semibold dark:bg-neutral-800 dark:text-neutral-100"
         no-styling
-        :item="{ type: 'text', id: '', text: chunk.value }"
       />
       <div
         v-if="chunk.type === 'text'"

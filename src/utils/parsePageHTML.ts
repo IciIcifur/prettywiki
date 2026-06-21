@@ -360,6 +360,9 @@ function parseAmbox(el: Element): AlertItem {
 export default function parsePageHTML(html: string): ArticleContentItem[] {
   const domParser = new DOMParser();
   const document = domParser.parseFromString(html, 'text/html');
+
+  document.querySelectorAll('style, script').forEach((el) => el.remove());
+
   const uiBlocks = parseChildren(document.body);
   return batchPageBlocks(uiBlocks);
 }
