@@ -33,15 +33,15 @@
     <template #header v-if="item.title">
       <ArticleHeading
         no-styling
-        class="flex w-full justify-center py-0.5 text-center font-semibold"
         :item="{ type: 'heading', level: 5, id: '', text: item.title }"
+        class="flex w-full justify-center py-0.5 text-center font-semibold"
       />
     </template>
     <UTable :data="filteredData" :ui="{ td: 'align-top' }">
       <template
-        v-for="column in columns"
         :key="column"
         #[`${column}-cell`]="{ row }"
+        v-for="column in columns"
       >
         <div v-if="row.original.value" class="flex flex-col items-start gap-2">
           <ArticleItem
