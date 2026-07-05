@@ -24,7 +24,6 @@
 </p>
 </div>
 
-
 ## About
 
 **PrettyWiki** is a Vue project originally started to explore Vue, and continued as an independent experiment.
@@ -41,6 +40,7 @@ For article navigation, the app keeps a small **LRU cache** in a **persistent Pi
 Recently viewed pages can be restored quickly, reducing repeated processing and improving perceived load time.
 
 ### Parsing
+
 Article content goes through a normalization pipeline before rendering:
 
 1. raw Wikipedia response (HTML) is fetched;
@@ -106,6 +106,7 @@ This project uses content from **Wikipedia** and related Wikimedia services via 
   [CC BY-SA](https://creativecommons.org/licenses/by-sa/4.0/) (and may include other licenses where applicable).
 
 Please refer to Wikimedia terms and licensing pages for full details:
+
 - https://www.wikipedia.org/
 - https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
 - https://www.mediawiki.org/wiki/API:Main_page
