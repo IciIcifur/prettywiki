@@ -61,8 +61,6 @@ thumbnails are shown first for faster initial paint, then replaced with higher-q
   <img src="./docs/images/screenshot-3.png" alt="Search experience" width="31%" />
 </p>
 
-> Replace file names with your actual screenshots in `./docs/images/`.
-
 ## Stack
 
 In addition to the core Vue stack, the app uses a few libraries:
