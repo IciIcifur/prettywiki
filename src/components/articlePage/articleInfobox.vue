@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { ArticleContentItem, InfoBoxItem } from '../../types/types.ts';
-  import { computed, onMounted } from 'vue';
+  import { computed } from 'vue';
 
   type InfoBoxChunk =
     | { type: 'label'; value: string }
@@ -44,8 +44,6 @@
 
     return chunks;
   });
-
-  onMounted(() => console.log(props.item, infoBoxChunks.value));
 </script>
 
 <template>
@@ -59,8 +57,8 @@
     <template #header v-if="item.title">
       <ArticleHeading
         no-styling
-        class="flex w-full justify-center py-0.5 text-center"
         :item="{ type: 'heading', level: 4, id: '', text: item.title }"
+        class="flex w-full justify-center py-0.5 text-center"
       />
     </template>
 
