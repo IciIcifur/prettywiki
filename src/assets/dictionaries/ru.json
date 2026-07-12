@@ -5,7 +5,10 @@
   },
   "footer": {
     "copyright": "© {author}, {year}",
-    "sources": "Источники"
+    "sources": "Источники",
+    "actionApi": "Wikipedia Action API",
+    "restApi": "Wikipedia REST API",
+    "wtfWikipedia": "wtf_wikipedia (библиотека парсинга)"
   },
   "main": {
     "greeting": {
@@ -21,7 +24,8 @@
         "random": "Случайная статья",
         "news": "Последние новости",
         "donate": "Поддержать ресурс"
-      }
+      },
+      "getRandomError": "Не удалось получить случайную статью..."
     },
     "timeline": {
       "title": "В этот день в мире..."
@@ -31,6 +35,22 @@
       "good": "Хорошая статья",
       "image": "Избранное фото",
       "facts": "А знаете ли вы?"
+    },
+    "toasts": {
+      "getEventsError": "Не удалось загрузить события дня",
+      "getTFAError": "Не удалось загрузить избранную статью",
+      "getTGAError": "Не удалось загрузить хорошую статью",
+      "getTFIError": "Не удалось загрузить изображение дня",
+      "getDYKError": "Не удалось загрузить факты дня"
+    }
+  },
+  "wiki": {
+    "toasts": {
+      "getArticleError": "Не удалось загрузить статью"
+    },
+    "tooltips": {
+      "expandList": "Развернуть список",
+      "collapseList": "Свернуть список"
     }
   },
   "login": {

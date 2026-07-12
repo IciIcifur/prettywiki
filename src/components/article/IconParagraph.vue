@@ -8,9 +8,13 @@
   <li class="flex h-fit w-full gap-4">
     <UIcon
       :name="PickTimeLineIcon([], paragraph)"
-      class="mt-1 size-5 text-neutral-500"
+      class="mt-1 size-5 shrink-0 text-neutral-500"
     />
-    <LinkText :text="paragraph" class="w-full" />
+    <ArticleText
+      no-styling
+      :item="{ id: '', type: 'text', text: paragraph }"
+      class="w-full"
+    />
   </li>
 </template>
 

@@ -13,31 +13,28 @@
         return {
           color: 'error',
           icon: 'i-lucide-camera',
-          link: '/',
         };
       case 'good':
         return {
           color: 'success',
           icon: 'i-lucide-circle-check-big',
-          link: '/',
         };
       case 'facts':
-        return { color: 'secondary', icon: 'i-lucide-telescope', link: '/' };
+        return { color: 'secondary', icon: 'i-lucide-telescope' };
       default:
-        return { color: 'warning', icon: 'i-lucide-star', link: '/' };
+        return { color: 'warning', icon: 'i-lucide-star' };
     }
   });
 </script>
 
 <template>
-  <ULink
-    :class="`text-${attrs.color} hover:text-${attrs.color}-600 hover:dark:text-${attrs.color}-300`"
-    :to="attrs.link"
+  <div
+    :class="`text-${attrs.color}`"
     class="flex w-fit items-center justify-start gap-2 text-sm font-medium transition-colors"
   >
     <UIcon :name="attrs.icon" class="size-5" />
     <p>{{ t(`main.articleType.${articleType}`) }}</p>
-  </ULink>
+  </div>
 </template>
 
 <style scoped></style>

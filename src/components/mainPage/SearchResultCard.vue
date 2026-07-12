@@ -1,12 +1,13 @@
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
+  import getPageUrl from '../../utils/getPageUrl.ts';
 
   const { locale } = useI18n();
-  const props = defineProps({
-    title: String,
-    firstLine: String,
-    lastUpdated: String,
-  });
+  const props = defineProps<{
+    title: string;
+    firstLine: string;
+    lastUpdated: string;
+  }>();
 
   const date = new Date(props.lastUpdated as string);
   const localizedDate = date.toLocaleDateString(locale.value, {
@@ -18,7 +19,7 @@
 
 <template>
   <UButton
-    :to="`/wiki/${title?.replace(' ', '_')}`"
+    :to="getPageUrl(title)"
     class="flex w-full flex-col items-start p-2"
     color="neutral"
     variant="ghost"

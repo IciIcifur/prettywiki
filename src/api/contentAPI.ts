@@ -3,7 +3,6 @@ import PickTimeLineIcon from '../utils/timelineIcon.ts';
 import type {
   ArticleSummary,
   EventItem,
-  MaterialsOfTheDay,
   Picture,
   SearchItem,
 } from '../types/types.ts';
@@ -11,6 +10,10 @@ import {
   GetFeatured,
   GetMainPageContents,
   GetOnThisDay,
+  GetPageHTML,
+  GetPageMedia,
+  GetRandomPageSummary,
+  ImageMetadataQueryRequest,
   SearchRequest,
 } from './api.ts';
 import parseTemplate from '../utils/parseTemplate.ts';
@@ -53,9 +56,7 @@ export async function GetHistoryForThisDay(
   return result;
 }
 
-export async function GetMaterialsOfTheDay(
-  locale: string
-): Promise<MaterialsOfTheDay | null> {
+export async function GetMaterialsOfTheDay(locale: string) {
   const result = await GetFeatured(locale);
   if (!result) return null;
 
@@ -66,7 +67,6 @@ export async function GetMaterialsOfTheDay(
   const { tfa, image, dyk } = result;
   const facts = dyk.map((fact) => fact.html);
 
-  console.log(result);
   let featuredPicture: Picture = {
     src: image.image.source,
     title: trimTitle(image.title),
@@ -126,4 +126,39 @@ export async function SearchForPage(
     });
 
   return null;
+}
+
+export async function GetRandomPageTitle(
+  locale: string
+): Promise<string | null> {
+  const summary = await GetRandomPageSummary(locale);
+  if (!summary) return null;
+
+  return summary.titles.normalized;
+}
+
+export async function GetPageByTitle(title: string, locale: string) {
+  try {
+    return GetPageHTML(locale, title);
+  } catch (e: any) {
+    console.error(`Failed to load page html: ${e}`);
+    return null;
+  }
+}
+export async function GetPageMediaByTitle(title: string, locale: string) {
+  try {
+    return GetPageMedia(locale, title);
+  } catch (e: any) {
+    console.error(`Failed to load page media: ${e}`);
+    return null;
+  }
+}
+
+export function GetMediaByTitle(title: string, locale: string) {
+  try {
+    return ImageMetadataQueryRequest(locale, title);
+  } catch (e: any) {
+    console.error(`Failed to load page media: ${e}`);
+    return null;
+  }
 }

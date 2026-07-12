@@ -2,10 +2,14 @@
   import LoginSign from './LoginSign.vue';
   import ToggleColorScheme from './ToggleColorScheme.vue';
   import { useI18n } from 'vue-i18n';
+  import { useRoute } from 'vue-router';
+  import { computed } from 'vue';
 
   const { t } = useI18n();
+  const route = useRoute();
 
   const menuItems = [{ slot: 'locale' }, { slot: 'user' }, { slot: 'scheme' }];
+  const isWikiPage = computed(() => route.path.includes('wiki'));
 </script>
 
 <template>
@@ -25,6 +29,9 @@
         {{ t('header.subtitle') }}
       </p>
     </div>
+
+    <BottomMenu v-if="isWikiPage" class="hidden md:flex" />
+
     <div class="hidden items-center gap-4 sm:flex">
       <LoginSign />
       <ToggleLocale />
