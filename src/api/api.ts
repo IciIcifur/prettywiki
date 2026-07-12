@@ -3,6 +3,7 @@ import type {
   Featured,
   MainPageRawContents,
   OnThisDay,
+  PageMediaItem,
   PageSummary,
   ProcessedQueryResult,
   QueryResult,
@@ -70,6 +71,7 @@ export async function ExpandTemplateRequest(
     return null;
   }
 }
+
 /** Request to Wikipedia REST API **/
 export async function GetRequest(locale: string, url: string, params?: any) {
   try {
@@ -120,6 +122,7 @@ export async function ImageMetadataQueryRequest(locale: string, title: string) {
           titles: title,
           prop: 'imageinfo',
           iiprop: 'url|metadata|extmetadata',
+          iiurlwidth: 800,
           format: 'json',
           origin: '*',
         },
@@ -181,10 +184,34 @@ export async function GetFeatured(locale: string): Promise<Featured | null> {
     `feed/featured/${date.getFullYear()}/${twoDigits(date.getMonth() + 1)}/${twoDigits(date.getDate())}`
   );
 }
+
+/** @returns page title, page image and page description **/
+export async function GetRandomPageSummary(
+  locale: string
+): Promise<PageSummary | null> {
+  return await GetRequest(locale, `page/random/summary/`);
+}
+
 /** @returns page title, page image and page description **/
 export async function GetPageSummary(
   locale: string,
   page: string
 ): Promise<PageSummary | null> {
   return await GetRequest(locale, `page/summary/${page}`);
+}
+
+/** @returns page html **/
+export async function GetPageHTML(
+  locale: string,
+  page: string
+): Promise<string | null> {
+  return await GetRequest(locale, `page/html/${page}`);
+}
+
+/** @returns media files on the page **/
+export async function GetPageMedia(
+  locale: string,
+  page: string
+): Promise<{ items: PageMediaItem[] } | null> {
+  return await GetRequest(locale, `page/media-list/${page}`);
 }

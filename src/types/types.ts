@@ -33,9 +33,72 @@ export interface ArticleSummary {
   image: string;
 }
 
-export interface MaterialsOfTheDay {
-  featuredArticle: ArticleSummary | null;
-  goodArticle: ArticleSummary | null;
-  featuredPicture: Picture | null;
-  facts: string[] | null;
+export interface Article {
+  title: string;
+  loadTimestamp: Date | undefined;
+  contents: ArticleContentItem[];
 }
+
+interface BaseItem {
+  id: string;
+}
+export interface HeadingItem extends BaseItem {
+  type: 'heading';
+  level: number;
+  text: string;
+}
+export interface ListItem extends BaseItem {
+  type: 'list';
+  listType: 'ordered' | 'bullet';
+  children: {
+    title: string;
+    children: ListItem[];
+  }[];
+}
+export interface PictureItem extends BaseItem {
+  type: 'picture';
+  src: string;
+  caption?: string;
+}
+export interface TextItem extends BaseItem {
+  type: 'text';
+  text: string;
+}
+
+export interface InfoBoxItem extends BaseItem {
+  type: 'infobox';
+  title?: string;
+  rows: {
+    label: string | null;
+    value: ArticleContentItem[];
+  }[];
+}
+
+export interface TableItem extends BaseItem {
+  type: 'table';
+  title?: string;
+  columns: string[];
+  rows: Record<string, any>[];
+}
+
+export interface AlertItem extends BaseItem {
+  type: 'alert';
+  classes: string;
+  title?: string;
+  text?: string;
+}
+
+export interface GalleryItem extends BaseItem {
+  type: 'gallery';
+  children: PictureItem[];
+}
+
+export type ArticleContentItem =
+  | HeadingItem
+  | ListItem
+  | PictureItem
+  | GalleryItem
+  | TextItem
+  | InfoBoxItem
+  | TableItem
+  | AlertItem;

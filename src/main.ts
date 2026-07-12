@@ -1,6 +1,7 @@
 import './style.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import ui from '@nuxt/ui/vue-plugin';
@@ -39,7 +40,7 @@ const router = createRouter({
   history: createWebHistory(),
 });
 const pinia = createPinia();
-
+pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(router);
 app.use(i18n);

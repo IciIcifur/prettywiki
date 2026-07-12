@@ -11,9 +11,11 @@ export const useUserStore = defineStore('user', {
   state: (): {
     isAuthenticated: boolean;
     user: null | User;
+    dataRestored: boolean;
   } => ({
     isAuthenticated: false,
     user: null,
+    dataRestored: false,
   }),
   actions: {
     async restoreUser() {

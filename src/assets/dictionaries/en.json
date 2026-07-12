@@ -5,7 +5,10 @@
   },
   "footer": {
     "copyright": "© {author}, {year}",
-    "sources": "Sources"
+    "sources": "Sources",
+    "actionApi": "Wikipedia Action API",
+    "restApi": "Wikipedia REST API",
+    "wtfWikipedia": "wtf_wikipedia (parsing library)"
   },
   "main": {
     "greeting": {
@@ -21,7 +24,8 @@
         "random": "Random article",
         "news": "Recent news",
         "donate": "Donate to resource"
-      }
+      },
+      "getRandomError": "Failed to get random article..."
     },
     "timeline": {
       "title": "On that day..."
@@ -31,6 +35,22 @@
       "good": "Good article",
       "image": "Featured photo",
       "facts": "Did you know..."
+    },
+    "toasts": {
+      "getEventsError": "Failed to load events for this day",
+      "getTFAError": "Failed to load the featured article",
+      "getTGAError": "Failed to load the good article",
+      "getTFIError": "Failed to load picture of the day",
+      "getDYKError": "Failed to load the featured facts"
+    }
+  },
+  "wiki": {
+    "toasts": {
+      "getArticleError": "Failed to load article"
+    },
+    "tooltips": {
+      "expandList": "Expand list",
+      "collapseList": "Collapse list"
     }
   },
   "login": {
