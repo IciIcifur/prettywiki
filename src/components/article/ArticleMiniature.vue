@@ -34,7 +34,10 @@
               {{ article.title }}
             </h4>
           </ULink>
-          <p class="line-clamp-1 flex w-full text-sm text-neutral-500 italic">
+          <p
+            :class="articleType === 'image' ? 'line-clamp-2' : 'line-clamp-1'"
+            class="w-full text-sm text-neutral-500 italic"
+          >
             {{ article.description }}
           </p>
         </div>

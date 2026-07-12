@@ -23,13 +23,26 @@
     }
   }
 
-  // TODO: add real urls
+  // TODO: replace with pages in project
+  const contentsUrl = computed(() =>
+    locale.value === 'ru'
+      ? 'https://ru.wikipedia.org/wiki/Википедия:Содержание'
+      : 'https://en.wikipedia.org/wiki/Portal:Contents'
+  );
+  const newsUrl = computed(() =>
+    locale.value === 'ru'
+      ? 'https://ru.wikipedia.org/wiki/Портал:Текущие_события'
+      : 'https://en.wikipedia.org/wiki/Portal:Current_events'
+  );
+  const donateUrl = 'https://donate.wikimedia.org/';
+
   const menuItems = computed(() => [
     {
       icon: 'i-lucide-table-of-contents',
       tooltip: t('main.search.bottomMenu.contents'),
       color: 'primary',
-      to: '/',
+      to: contentsUrl.value,
+      target: '_blank',
       onClick: () => {},
     },
     {
@@ -50,14 +63,16 @@
       icon: 'i-lucide-clock',
       tooltip: t('main.search.bottomMenu.news'),
       color: 'error',
-      to: '/',
+      to: newsUrl.value,
+      target: '_blank',
       onClick: () => {},
     },
     {
       icon: 'i-lucide-hand-coins',
       tooltip: t('main.search.bottomMenu.donate'),
       color: 'success',
-      to: '/',
+      to: donateUrl,
+      target: '_blank',
       onClick: () => {},
     },
   ]);
@@ -73,6 +88,7 @@
       <UButton
         @click.stop="item.onClick"
         :color="item.color"
+        :target="item.target"
         :to="item.to"
         class="w-full cursor-pointer justify-center"
         size="xl"

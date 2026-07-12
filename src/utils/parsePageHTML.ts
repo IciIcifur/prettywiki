@@ -10,6 +10,10 @@ import batchPageBlocks from './batchPageBlocks.ts';
 
 const AMBOX_REGEX = /\b(?:ambox|tmbox|cmbox|imbox|ombox|fmbox)\b/;
 const FILE_TYPEOF_REGEX = /\bmw:File\b/;
+const REFERENCES_TYPEOF_REGEX = /\bmw:Extension\/references\b/;
+const TECHNICAL_CLASS_REGEX =
+  /\b(navbox|vertical-navbox|navbox-styles|catlinks|printfooter|mw-editsection|reflist|sistersitebox|side-box|noprint|authority-control|navigation-not-searchable)\b/;
+const TECHNICAL_ID_REGEX = /^(catlinks|coordinates|siteSub|contentSub)$/;
 
 const generateId = () => crypto.randomUUID?.();
 
@@ -23,13 +27,24 @@ function isFileElement(el: Element): boolean {
   return FILE_TYPEOF_REGEX.test(el.getAttribute('typeof') || '');
 }
 
+function isReferencesElement(el: Element): boolean {
+  return (
+    REFERENCES_TYPEOF_REGEX.test(el.getAttribute('typeof') || '') ||
+    el.classList.contains('references')
+  );
+}
+
 function shouldSkipElement(el: Element): boolean {
   const tagName = el.tagName.toLowerCase();
   return (
     el.classList.contains('mw-empty-elt') ||
     Array.from(el.classList).some((c) => c.startsWith('ts-')) ||
     tagName === 'meta' ||
-    tagName === 'style'
+    tagName === 'style' ||
+    tagName === 'sup' ||
+    TECHNICAL_CLASS_REGEX.test(el.className) ||
+    TECHNICAL_ID_REGEX.test(el.id) ||
+    isReferencesElement(el)
   );
 }
 
@@ -111,6 +126,8 @@ function parseElement(el: Element): ArticleContentItem | null {
 function parseChildren(el: Element): ArticleContentItem[] {
   const result: ArticleContentItem[] = [];
   for (const child of Array.from(el.children)) {
+    if (shouldSkipElement(child)) continue;
+
     const tag = child.tagName.toLowerCase();
     const isContainer = tag === 'div' || tag === 'section';
 
@@ -176,7 +193,7 @@ function parseTable(el: Element): InfoBoxItem | TableItem {
     const row: Record<string, string> = {};
     cells.forEach((cell, i) => {
       const key = columns[i] || String(i);
-      row[key] = cell.textContent?.trim() || '';
+      row[key] = removeStyles(cell);
     });
     return row;
   });
@@ -341,20 +358,54 @@ function parseInfoBoxCell(td: Element): ArticleContentItem[] {
 }
 
 function parseAmbox(el: Element): AlertItem {
-  const textRoot = el.querySelector('.mbox-text, .mbox-text-div') ?? el;
-  const clone = textRoot.cloneNode(true) as Element;
+  // mbox-text-div (основной текст) и mbox-textsmall-div (мелкий шрифт/пояснение)
+  // это соседние div'ы, а не один узел — querySelector брал только первый
+  const textDivs = Array.from(
+    el.querySelectorAll('.mbox-text-div, .mbox-textsmall-div')
+  );
+  const sources = textDivs.length
+    ? textDivs
+    : [el.querySelector('.mbox-text') ?? el];
 
-  const boldEl = clone.querySelector('b');
+  const clones = sources.map((node) => node.cloneNode(true) as Element);
+
+  const boldEl = clones[0]?.querySelector('b');
   const title = boldEl?.textContent?.trim();
   boldEl?.remove();
+
+  // берём innerHTML каждого клона (не outerHTML) и склеиваем —
+  // иначе в текст попадут сами теги <div>, ломая разметку внутри <p>
+  const text = clones
+    .map((clone) => removeStyles(clone))
+    .filter(Boolean)
+    .join(' ');
 
   return {
     id: generateId(),
     type: 'alert',
     classes: el.className,
     title,
-    text: removeStyles(clone),
+    text,
   };
+}
+
+function removeEmptySections(
+  blocks: ArticleContentItem[]
+): ArticleContentItem[] {
+  const result: ArticleContentItem[] = [];
+
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    if (block.type === 'heading') {
+      const next = blocks[i + 1];
+      const isEmpty =
+        !next || (next.type === 'heading' && next.level <= block.level);
+      if (isEmpty) continue;
+    }
+    result.push(block);
+  }
+
+  return result;
 }
 
 export default function parsePageHTML(html: string): ArticleContentItem[] {
@@ -363,6 +414,6 @@ export default function parsePageHTML(html: string): ArticleContentItem[] {
 
   document.querySelectorAll('style, script').forEach((el) => el.remove());
 
-  const uiBlocks = parseChildren(document.body);
+  const uiBlocks = removeEmptySections(parseChildren(document.body));
   return batchPageBlocks(uiBlocks);
 }

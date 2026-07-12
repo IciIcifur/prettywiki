@@ -13,12 +13,12 @@
       :src="article.image"
       class="h-fit w-fit sm:float-left sm:mr-4 sm:mb-1"
     />
-    <p
+    <ArticleText
       :key="index"
       v-for="(paragraph, index) in article.summary.split('\n')"
+      no-styling
+      :item="{ id: '', type: 'text', text: paragraph }"
       class="indent-6"
-    >
-      {{ paragraph }}
-    </p>
+    />
   </div>
 </template>
