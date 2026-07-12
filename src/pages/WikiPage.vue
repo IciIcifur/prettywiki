@@ -13,7 +13,9 @@
   const { dataRestored } = storeToRefs(useUserStore());
 
   const title = computed(() => route.params.title.toString());
-  const normalizedTitle = computed(() => title.value.replaceAll('_', ' '));
+  const normalizedTitle = computed(() =>
+    (title.value as any).replaceAll('_', ' ')
+  );
 
   const { loadPage } = useWikiStore();
   const { activePage } = storeToRefs(useWikiStore());

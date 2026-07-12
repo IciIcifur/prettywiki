@@ -58,8 +58,8 @@
     :text="title"
   >
     <ULink
-      :target="isExternal ? '_blank' : undefined"
       :rel="isExternal ? 'noopener noreferrer' : undefined"
+      :target="isExternal ? '_blank' : undefined"
       :to="resolvedHref"
     >
       <span v-html="text" class="truncate text-nowrap" />

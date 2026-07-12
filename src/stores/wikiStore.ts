@@ -26,7 +26,7 @@ export const useWikiStore = defineStore('wiki', () => {
       date.getDate() !== today.getDate()
     );
   }
-  function getArticleKey(title: string) {
+  function getArticleKey(title: any) {
     return title.replaceAll(/\s/g, '').trim().replaceAll(' ', '_');
   }
   function hasCache(key: string) {
