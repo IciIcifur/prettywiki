@@ -42,8 +42,8 @@ const baseFeaturedState: LocaleState<FeaturedState> = {
 };
 
 interface LastLoaded {
-  events: LocaleState<Date | null>;
-  featured: LocaleState<Date | null>;
+  events: LocaleState<number | null>;
+  featured: LocaleState<number | null>;
 }
 
 export const useMainPageStore = defineStore(
@@ -75,7 +75,7 @@ export const useMainPageStore = defineStore(
 
     async function loadEvents() {
       const loadDate = lastLoaded.value.events[locale.value];
-      if (!!loadDate && !isOutdated(loadDate)) return;
+      if (!!loadDate && !isOutdated(new Date(loadDate))) return;
 
       events.value[locale.value].isLoading = true;
       try {
@@ -84,7 +84,7 @@ export const useMainPageStore = defineStore(
 
         events.value[locale.value].data = result;
 
-        lastLoaded.value.events[locale.value] = new Date();
+        lastLoaded.value.events[locale.value] = Date.now();
         events.value[locale.value].error = false;
       } catch (e: any) {
         toast.add({
@@ -102,7 +102,7 @@ export const useMainPageStore = defineStore(
     }
     async function loadFeatured() {
       const loadDate = lastLoaded.value.featured[locale.value];
-      if (!!loadDate && !isOutdated(loadDate)) return;
+      if (!!loadDate && !isOutdated(new Date(loadDate))) return;
 
       featured.value[locale.value].isLoading = true;
       try {
@@ -116,7 +116,7 @@ export const useMainPageStore = defineStore(
           dyk: response.facts,
         };
 
-        lastLoaded.value.featured[locale.value] = new Date();
+        lastLoaded.value.featured[locale.value] = Date.now();
         featured.value[locale.value].error = false;
       } catch (e: any) {
         toast.add({
