@@ -5,7 +5,10 @@
   },
   "footer": {
     "copyright": "© {author}, {year}",
-    "sources": "Источники"
+    "sources": "Источники",
+    "actionApi": "Wikipedia Action API",
+    "restApi": "Wikipedia REST API",
+    "wtfWikipedia": "wtf_wikipedia (библиотека парсинга)"
   },
   "main": {
     "greeting": {
